@@ -4,7 +4,7 @@
 			<nav-header></nav-header>
 		</el-header>
   	<el-container>
-			<el-aside width='200px'>
+			<el-aside width='160px'>
 				<nav-side></nav-side>
 			</el-aside>
   		<el-main>
@@ -44,5 +44,8 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
+}
+.el-aside{
+	overflow-x: hidden;
 }
 </style>

@@ -1,0 +1,25 @@
+.table-function{
+	text-align: left;
+}
+.table-search{
+	width: 50%;
+	display: flex;
+	margin: 10px 0;
+}
+.table-search button{
+	margin-left: 20px;
+}
+.cell{
+	text-align: center;
+}
+.myPagination{
+	margin-top: 10px;
+	text-align: right;
+}
+.myForm{
+	text-align: left;
+}
+a{
+	text-decoration: none;
+	color: #303133;
+}
