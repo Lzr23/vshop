@@ -82,7 +82,6 @@
 						trigger: 'change'
 					}],
 					sex: [{
-						type: 'array',
 						required: true,
 						message: '请至少选择一个会员性别',
 						trigger: 'change'

@@ -19,11 +19,12 @@
 		    style="width: 100%"
 		    @selection-change="handleSelectionChange">
 		    <el-table-column type="selection"></el-table-column>
-		    <el-table-column label="日期">
-		      <template slot-scope="scope">{{ scope.row.date }}</template>
-		    </el-table-column>
+		    <el-table-column prop="cell" label="卡号"></el-table-column>
 		    <el-table-column prop="name" label="姓名"></el-table-column>
-		    <el-table-column prop="address" label="地址" show-overflow-tooltip>
+		    <el-table-column prop="sex" label="性别"></el-table-column>
+		    <el-table-column prop="grade" label="等级"></el-table-column>
+		    <el-table-column prop="balance" label="余额"></el-table-column>
+		    <el-table-column prop="status" label="状态"></el-table-column>
 		    </el-table-column>
 		</el-table>
 		<div class="myPagination">
@@ -40,33 +41,54 @@
 			return {
 				findContent: '',  ////搜索内容
 				tableData: [{   ////表格数据
-		          date: '2016-05-03',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }, {
-		          date: '2016-05-02',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }, {
-		          date: '2016-05-04',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }, {
-		          date: '2016-05-01',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }, {
-		          date: '2016-05-08',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }, {
-		          date: '2016-05-06',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }, {
-		          date: '2016-05-07',
+		          cell: '15218263842',
 		          name: '王小虎',
-		          address: '上海市普陀区金沙江路 1518 弄'
+		          sex: '男',
+		          grade: '普通会员',
+		          balance: 200,
+		          status: '正常'
 		        }],
 		        multipleSelection: []
 			}

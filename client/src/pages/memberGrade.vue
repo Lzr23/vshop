@@ -12,9 +12,8 @@
 		    style="width: 100%"
 		    @selection-change="handleSelectionChange">
 		    <el-table-column type="selection"></el-table-column>
-		    <el-table-column prop="name" label="分类名称"></el-table-column>
-		    <el-table-column prop="parent" label="父级分类">
-		    </el-table-column>
+		    <el-table-column prop="name" label="等级名称"></el-table-column>
+		    <el-table-column prop="discount" label="等级折扣"></el-table-column>
 		</el-table>
 		<div class="myPagination">
 			<el-pagination background layout="prev, pager, next" :total="100">
@@ -30,17 +29,17 @@
 			return {
 				findContent: '',  ////搜索内容
 				tableData: [{   ////表格数据
-		          name: '休闲裤',
-		          parent: '下装'
+		          name: '普通会员',
+		          discount: 0.7
 		        }, {
-		          name: '休闲裤',
-		          parent: '下装'
+		          name: '白银会员',
+		          discount: 0.7
 		        }, {
-		          name: '休闲裤',
-		          parent: '下装'
+		          dname: '黄金会员',
+		          discount: 0.7
 		        }, {
-		          name: '休闲裤',
-		          parent: '下装'
+		          name: '钻石会员',
+		          discount: 0.7
 		        }],
 		        multipleSelection: []
 			}
