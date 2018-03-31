@@ -35,7 +35,7 @@
 		          name: '白银会员',
 		          discount: 0.7
 		        }, {
-		          dname: '黄金会员',
+		          name: '黄金会员',
 		          discount: 0.7
 		        }, {
 		          name: '钻石会员',
