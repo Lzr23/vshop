@@ -1,5 +1,6 @@
 .table-function{
 	text-align: left;
+	margin-bottom: 10px;
 }
 .table-search{
 	width: 50%;
@@ -22,4 +23,30 @@
 a{
 	text-decoration: none;
 	color: #303133;
+}
+
+.statisticsItem{
+	width: 35%;
+	padding: 10px 5%;
+	margin-bottom: 20px;
+	color: #FFFFFF;
+	background: #409EFF;
+	border-radius: 5px;
+}
+.statisticsItem h4{
+	margin-bottom: 10px;
+}
+.statisticsItem p{
+	text-align: left;
+}
+.relative{
+	position: relative
+}
+.statisticsTable{
+	width: 45%;
+	margin-left: 5%;
+	float: left;
+}
+.overflowHiddeng{
+	overflow: hidden;
 }
