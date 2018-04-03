@@ -1,15 +1,14 @@
 <template>
 	<el-row class='myHead'>
 		<el-col :span='6' class='logo'>
-			<!--<a href="/">
-			  <img class="navbar-brand-logo" src="/static/logo.png">
-			</a>-->
-			<router-link href="javascript:;" to="/">
+			<router-link href="javascript:;" to="/home">
 			  <img class="navbar-brand-logo" src="/static/logo.png">
 			</router-link>
 		</el-col>
 		<router-link href="javascript:;" to="/backEnd">后台管理</router-link>
-		<router-link href="javascript:;" to="/checkedstand">前台收银</router-link>
+		<router-link href="javascript:;" to="/checkstand">前台收银</router-link>
+		<!--<a href="javascript:;">退出</a>-->
+		<router-link href="javascript:;" to="/">退出</router-link>
 	</el-row>
 </template>
 

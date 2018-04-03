@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import login from '@/pages/login'
 import home from '@/pages/home'
 import backEnd from '@/pages/backEnd'
 import checkstand from '@/pages/checkstand'
@@ -24,6 +25,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'login',
+      component: login
+    },
+    {
+      path: '/home',
       name: 'home',
       component: home
     },
@@ -34,7 +40,6 @@ export default new Router({
     },
     {
       path: '/backEnd',
-      name: 'backEnd',
       component: backEnd,
       children: [
         {

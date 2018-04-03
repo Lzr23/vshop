@@ -1,5 +1,8 @@
 <template>
   <div id="backEnd">
+  	<el-header>
+      <nav-header></nav-header>
+    </el-header>
     <el-container>
       <el-aside width='170px'>
         <nav-side></nav-side>
@@ -12,9 +15,11 @@
 </template>
 
 <script>
+	import NavHeader from '../components/NavHeader'
   import NavSide from '../components/NavSide'
   export default {
     components: {
+    	NavHeader,
       NavSide
     }
   }

@@ -55,7 +55,7 @@
         <router-link href="javascript:;" to="/backEnd/statisticsGoods">商品统计</router-link>
       </el-menu-item>
       <el-menu-item index="4-3">
-        <router-link href="javascript:;" to="/backEnd/statisticsSale">销售统计</router-link>
+        <router-link href="javascript:;" to="/backEnd/statisticsSale">订单统计</router-link>
       </el-menu-item>
     </el-submenu>
   </el-menu>

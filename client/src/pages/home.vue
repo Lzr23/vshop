@@ -1,82 +1,88 @@
 <template>
-  <div class="homeContainer">
-    <ul class="todayCount">
-      <li>
-        <div class="todayTotal">
-          <p>今日收入</p>
-          <h1>65450<span>元</span></h1>
-        </div>
-        <ul class="todayDetail">
-          <li>
-            <p>现金</p>
-            <p>1200</p>
-          </li>
-          <li>
-            <p>银行卡</p>
-            <p>6800</p>
-          </li>
-          <li>
-            <p>储蓄卡</p>
-            <p>1200</p>
-          </li>
-          <li>
-            <p>微信</p>
-            <p>5850</p>
-          </li>
-          <li>
-            <p>支付宝</p>
-            <p>6840</p>
-          </li>
-          <li>
-            <p>优惠券</p>
-            <p>500</p>
-          </li>
-          <li>
-            <p>其他</p>
-            <p>0</p>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <div class="todayTotal">
-          <p>会员总数</p>
-          <h1>3000<span>人</span></h1>
-        </div>
-        <ul class="todayDetail">
-          <li>
-            <p>今日新增</p>
-            <p>10</p>
-          </li>
-          <li>
-            <p>昨日新增</p>
-            <p>20</p>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <div class="todayTotal">
-          <p>今日消费收入</p>
-          <h1>65450<span>元</span></h1>
-        </div>
-        <ul class="todayDetail">
-          <li>
-            <p>会员消费</p>
-            <p>41650</p>
-          </li>
-          <li>
-            <p>散客消费</p>
-            <p>25120</p>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <div class="theYear" ref='theYear'></div>
+	<div>
+		<el-header>
+      <nav-header></nav-header>
+    </el-header>
+	  <div class="homeContainer">
+	    <ul class="todayCount">
+	      <li>
+	        <div class="todayTotal">
+	          <p>今日收入</p>
+	          <h1>65450<span>元</span></h1>
+	        </div>
+	        <ul class="todayDetail">
+	          <li>
+	            <p>现金</p>
+	            <p>1200</p>
+	          </li>
+	          <li>
+	            <p>银行卡</p>
+	            <p>6800</p>
+	          </li>
+	          <li>
+	            <p>储蓄卡</p>
+	            <p>1200</p>
+	          </li>
+	          <li>
+	            <p>微信</p>
+	            <p>5850</p>
+	          </li>
+	          <li>
+	            <p>支付宝</p>
+	            <p>6840</p>
+	          </li>
+	          <li>
+	            <p>优惠券</p>
+	            <p>500</p>
+	          </li>
+	          <li>
+	            <p>其他</p>
+	            <p>0</p>
+	          </li>
+	        </ul>
+	      </li>
+	
+	      <li>
+	        <div class="todayTotal">
+	          <p>会员总数</p>
+	          <h1>3000<span>人</span></h1>
+	        </div>
+	        <ul class="todayDetail">
+	          <li>
+	            <p>今日新增</p>
+	            <p>10</p>
+	          </li>
+	          <li>
+	            <p>昨日新增</p>
+	            <p>20</p>
+	          </li>
+	        </ul>
+	      </li>
+	
+	      <li>
+	        <div class="todayTotal">
+	          <p>今日消费收入</p>
+	          <h1>65450<span>元</span></h1>
+	        </div>
+	        <ul class="todayDetail">
+	          <li>
+	            <p>会员消费</p>
+	            <p>41650</p>
+	          </li>
+	          <li>
+	            <p>散客消费</p>
+	            <p>25120</p>
+	          </li>
+	        </ul>
+	      </li>
+	    </ul>
+	    <div class="theYear" ref='theYear'></div>
+	  </div>
   </div>
 </template>
 
 <script>
+	import NavHeader from '../components/NavHeader'
   export default {
     data() {
         return {
@@ -113,6 +119,9 @@
           }
         }
       },
+      components: {
+	    	NavHeader
+	    },
       mounted() {
         this.setEchart()
       },
