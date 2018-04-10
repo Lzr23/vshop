@@ -26,11 +26,10 @@
 				},
 				rules: {
 					name: [{
-							required: true,
-							message: '请输入登录名',
-							trigger: 'blur'
-						}
-					],
+						required: true,
+						message: '请输入登录名',
+						trigger: 'blur'
+					}],
 					password: [{
 						required: true,
 						message: '请输入密码',
@@ -43,9 +42,15 @@
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-						this.$router.push({
-				          path: '/home'
-				        })
+						this.$http.post('/users/login', {
+							userName: 'aaa',
+							userPwd: '123456'
+						}).then(response => {
+							console.log(response)
+						})
+						//						this.$router.push({
+						//				          path: '/home'
+						//				        })
 					} else {
 						console.log('error submit!!');
 						return false;
@@ -59,7 +64,7 @@
 	}
 </script>
 <style>
-	.loginContainer{
+	.loginContainer {
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -69,7 +74,8 @@
 		left: 0;
 		right: 0;
 	}
-	.loginContainer>div{
+	
+	.loginContainer>div {
 		width: 60%;
 	}
 </style>

@@ -6,15 +6,19 @@ import router from './router'
 import Axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLazyload from 'vue-lazyload'
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/myCss.css'
+
 let echarts = require('echarts/lib/echarts')
 require('echarts/lib/chart/line')
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/pie')
 require('echarts/lib/component/legend');
 require('echarts/lib/component/tooltip')
+
+import apiConfig from '../config/api.config'
 
 Vue.config.productionTip = false
 Vue.use(VueLazyload, {
@@ -23,6 +27,7 @@ Vue.use(VueLazyload, {
 })
 
 Vue.use(VueAxios, Axios)
+Axios.defaults.baseURL = apiConfig.baseUrl
 Vue.use(ElementUI)
 
 
