@@ -48,9 +48,9 @@
 						}).then(response => {
 							console.log(response)
 						})
-						//						this.$router.push({
-						//				          path: '/home'
-						//				        })
+												this.$router.push({
+										          path: '/home'
+										        })
 					} else {
 						console.log('error submit!!');
 						return false;
