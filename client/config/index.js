@@ -14,6 +14,9 @@ module.exports = {
 			'/users/**': {
 				target: 'http://localhost:3000'
 			},
+			'/members/**': {
+				target: 'http://localhost:3000'
+			},
 			'/api/**': {
 				target: 'http://localhost:3000',
 				pathRewrite: {

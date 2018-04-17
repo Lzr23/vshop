@@ -6,7 +6,7 @@
 					<el-input v-model="ruleForm.name"></el-input>
 				</el-form-item>
 				<el-form-item label="密码" prop="password">
-					<el-input v-model="ruleForm.password"></el-input>
+					<el-input type='password' v-model="ruleForm.password"></el-input>
 				</el-form-item>
 				<el-form-item>
 					<el-button style='width: 100%;' type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -43,16 +43,19 @@
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
 						this.$http.post('/users/login', {
-							userName: 'aaa',
-							userPwd: '123456'
+							userName: this.ruleForm.name,
+							userPwd: this.ruleForm.password
 						}).then(response => {
-							console.log(response)
+							let res = response.data
+							if (res.status == '1') {
+								this.$router.push({
+						          path: '/home'
+						        })
+							} else {
+								this.$message(res.message);
+							}
 						})
-												this.$router.push({
-										          path: '/home'
-										        })
 					} else {
-						console.log('error submit!!');
 						return false;
 					}
 				});

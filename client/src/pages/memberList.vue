@@ -5,6 +5,7 @@
 			<el-button type="primary" plain size='small'>充值</el-button>
 			<el-button type="primary" plain size='small'>修改密码</el-button>
 			<el-button type="primary" plain size='small'>挂失</el-button>
+			<el-button type="primary" plain size='small'>取挂</el-button>
 			<el-button type="primary" plain size='small'>修改</el-button>
 			<el-button type="primary" plain size='small'>删除</el-button>
 		</div>
@@ -14,7 +15,8 @@
 		</div>
 		<el-table
 		    ref="multipleTable"
-		    :data="tableData"
+		    :data="memberList"
+		    v-loading="loading"
 		    tooltip-effect="dark"
 		    style="width: 100%"
 		    @selection-change="handleSelectionChange">
@@ -40,63 +42,37 @@
 		data() {
 			return {
 				findContent: '',  ////搜索内容
-				tableData: [{   ////表格数据
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }, {
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }, {
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }, {
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }, {
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }, {
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }, {
-		          cell: '15218263842',
-		          name: '王小虎',
-		          sex: '男',
-		          grade: '普通会员',
-		          balance: 200,
-		          status: '正常'
-		        }],
-		        multipleSelection: []
+				page: 1,  /////当前第几页
+				pageSize: 10,  ///////一页10条数据
+				loading: false,       // 是否正在加载
+				memberList: [],  /////会员列表
+		        multipleSelection: []  /////选中的会员
 			}
 		},
 		methods:{
 			handleSelectionChange(val) {
-	        this.multipleSelection = val;
-	      }
+		    	this.multipleSelection = val;
+		   },
+		   getMemberList() {
+		   	var params = {
+		   		page: this.page,
+        		pageSize: this.pageSize,
+        		findContent: this.findContent
+		   	}
+		   	this.loading = true
+		   	this.$http.get('/members/list', {params})
+		   	.then(res => {
+		   		res = res.data
+		   		this.loading = false
+		   		if (res.status == '1') {
+		   			console.log(res.result.list)
+		   			this.memberList = res.result.list
+		   		}
+		   	})
+		   }
+		},
+		mounted() {
+			this.getMemberList()
 		}
 	}
 </script>
