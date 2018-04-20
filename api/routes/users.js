@@ -7,7 +7,6 @@ router.post('/login', (req, res, next) => {
 	    userName:req.body.userName,//获取用户名
 	    userPwd:req.body.userPwd//获取密码
 	  }
-	console.log(param)
 	////////管理员登录
 	if (param.userName == 'admin' && param.userPwd == '123456') {
 		//给客户端设置cookie, userId改改，值为用户的ID，cookie的作用域是/,过期时间是12个小时

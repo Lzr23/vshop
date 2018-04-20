@@ -23,6 +23,25 @@ router.get('/all', (req, res, next) => {
 			});
 		})
 })
+
+//////获取单个会员
+router.get('/getMember', (req, res, next) => {
+	let {memberCard} = req.query
+	Member.findOne({memberCard}, (err, doc) => {
+		if (err) {
+			return res.json({
+				status: '0',
+				msg: '获取失败'
+			})
+		} else {
+			return res.json({
+				status: '1',
+				result: doc
+			})
+		}
+	})
+})
+
 //////根据条件查询会员
 router.get('/list', (req, res, next) => {
 	console.log(req.originalUrl)
@@ -32,7 +51,9 @@ router.get('/list', (req, res, next) => {
 	let findContent = req.query['findContent']
 	let params
 	if (findContent) {
-		params = {findContent}; //查询时候的过滤参数
+		params = {  //查询时候的过滤参数
+			memberCard: {$regex: findContent}
+		}
 	} else {
 		params = {}
 	}
@@ -58,19 +79,44 @@ router.get('/list', (req, res, next) => {
 		})
 })
 
-/////////新增会员
+
 router.post('/memberAdd', (req, res, next) => {
 	let newMember = req.body
-	Member.create(newMember, (err) => {
-		if (err) {
-			return res.json({
-				status: '0',
-				msg: '新增失败'
+	let {memberCard} = req.body
+	Member.findOne({memberCard}, (err, doc) => {
+		if (doc != null) {   /////////修改会员
+			doc.memberCard = newMember.memberCard
+			doc.memberCell = newMember.memberCell
+			doc.memberGrade = newMember.memberGrade
+			doc.memberPassword = newMember.memberPassword
+			doc.memberBalance = newMember.memberBalance
+			doc.memberSex = newMember.memberSex
+			doc.memberRemark = newMember.memberRemark
+			doc.save((err, doc1) => {
+				if (err) {
+					return res.json({
+			          status: '0',
+			          msg: err.message
+			        })
+				}
+				return res.json({
+		          status: '1',
+		          msg: '修改成功'
+		        })
 			})
-		} else {
-			return res.json({
-				status: '1',
-				msg: '新增会员成功'
+		} else {   /////////新增会员
+			Member.create(newMember, (err) => {
+				if (err) {
+					return res.json({
+						status: '0',
+						msg: '新增失败'
+					})
+				} else {
+					return res.json({
+						status: '1',
+						msg: '新增会员成功'
+					})
+				}
 			})
 		}
 	})
@@ -109,5 +155,83 @@ router.post('/recharge', (req, res, next) => {
 	})
 })
 
+//////会员修改密码
+router.post('/changePass', (req, res, next) => {
+	let {memberCard, old, newPass} = req.body
+	member.findOne({memberCard}, (err, doc) => {
+		if (err) {
+			return res.json({
+		      status: '0',
+		      msg: err.message
+		    });
+		}
+		if (doc.memberPassword != old) {
+			return res.json({
+		      status: '0',
+		      msg: '密码有误，请重新输入'
+		    });
+		}
+		doc.memberPassword = newPass
+		doc.save((err, doc1) => {
+			if (err) {
+				return res.json({
+		          status: '0',
+		          msg: err.message
+		        })
+			}
+			return res.json({
+	          status: '1',
+	          msg: '修改成功'
+	        })
+		})
+	})
+})
+
+
+//////////////会员冻结
+router.post('/loss', (req, res, next) => {
+	let {members} = req.body
+	members.forEach(item => {
+		let memberCard = item.memberCell
+		Member.findOne({memberCard}, (err, doc) => {
+			doc.memberStatus = 0
+			doc.save((err, doc) => {
+				if (err) {
+					return res.json({
+			          status: '0',
+			          msg: err.message
+			        })
+				}
+			})
+		})
+	})
+	return res.json({
+      status: '1',
+      msg: '冻结成功'
+    })
+})
+
+//////////////会员解冻
+router.post('/normal', (req, res, next) => {
+	let {members} = req.body
+	members.forEach(item => {
+		let memberCard = item.memberCell
+		Member.findOne({memberCard}, (err, doc) => {
+			doc.memberStatus = 1
+			doc.save((err, doc) => {
+				if (err) {
+					return res.json({
+			          status: '0',
+			          msg: err.message
+			        })
+				}
+			})
+		})
+	})
+	return res.json({
+	  status: '1',
+	  msg: '解冻成功'
+	})
+})
 
 module.exports = router;

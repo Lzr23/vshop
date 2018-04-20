@@ -39,7 +39,7 @@
 						<el-input type="textarea" v-model="ruleForm.memberRemark"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="submitForm('ruleForm')">立即新增</el-button>
+						<el-button type="primary" @click="submitForm('ruleForm')">立即保存</el-button>
 						<el-button @click="resetForm('ruleForm')">重置</el-button>
 					</el-form-item>
 				</el-form>
@@ -123,6 +123,20 @@
 			},
 			resetForm(formName) {
 				this.$refs[formName].resetFields();
+			},
+			getMember(memberCard) {
+				let params = {
+					memberCard
+				}
+				this.$http.get('/members/getMember', {params})
+				.then(res => {
+					res = res.data
+					if (res.status == '1') {
+						this.ruleForm = res.result
+					} else {
+						this.$message(res.msg)
+					}
+				})
 			}
 //			handleAvatarSuccess(res, file) {
 //				this.imageUrl = URL.createObjectURL(file.raw);
@@ -139,6 +153,12 @@
 //				}
 //				return isJPG && isLt2M;
 //			}
+		},
+		mounted() {
+			if (this.$route.params.memberCard) {
+				this.getMember(this.$route.params.memberCard)
+			}
+			
 		}
 	}
 </script>

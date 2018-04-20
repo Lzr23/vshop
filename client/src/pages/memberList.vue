@@ -3,15 +3,14 @@
 		<div class="table-function">
 			<el-button type="primary" plain size='small' @click="gotoAdd">新增</el-button>
 			<el-button type="primary" plain size='small' @click='showRecharge'>充值</el-button>
-			<el-button type="primary" plain size='small'>修改密码</el-button>
-			<el-button type="primary" plain size='small'>挂失</el-button>
-			<el-button type="primary" plain size='small'>取挂</el-button>
-			<el-button type="primary" plain size='small'>修改</el-button>
-			<el-button type="primary" plain size='small'>删除</el-button>
+			<el-button type="primary" plain size='small' @click='showChangePass'>修改密码</el-button>
+			<el-button type="primary" plain size='small' @click='showLoss'>冻结</el-button>
+			<el-button type="primary" plain size='small' @click='showNormal'>解冻</el-button>
+			<el-button type="primary" plain size='small' @click='memberEdit'>修改</el-button>
 		</div>
 		<div class="table-search">
-			<el-input placeholder="输入会员卡号/姓名" prefix-icon="el-icon-search" v-model="findContent"></el-input>
-			<el-button type="primary" plain size='small'>查询</el-button>
+			<el-input placeholder="输入会员卡号" prefix-icon="el-icon-search" v-model="findContent"></el-input>
+			<el-button type="primary" plain size='small' @click="getMemberList()">查询</el-button>
 		</div>
 		<el-table
 		    ref="multipleTable"
@@ -50,6 +49,40 @@
 		    <el-button type="primary" @click="rechargeConfirm">确 定</el-button>
 		  </div>
 		</el-dialog>
+		
+		<el-dialog title="修改密码" :visible.sync="changePasswordVisible">
+		  <el-form :model="changePasswordForm">
+		    <el-form-item label="旧密码">
+		      <el-input v-model="changePasswordForm.old"></el-input>
+		    </el-form-item>
+		    <el-form-item label="新密码">
+		      <el-input v-model="changePasswordForm.newPass"></el-input>
+		    </el-form-item>
+		    <el-form-item label="确认密码">
+		      <el-input v-model="changePasswordForm.newConfirm"></el-input>
+		    </el-form-item>
+		  </el-form>
+		  <div slot="footer" class="dialog-footer">
+		    <el-button @click="changePasswordVisible = false">取 消</el-button>
+		    <el-button type="primary" @click="changePassword">确 定</el-button>
+		  </div>
+		</el-dialog>
+		
+		<el-dialog title="冻结" :visible.sync="lossVisible">
+			<span>确认冻结所有选中会员？</span>
+		  <div slot="footer" class="dialog-footer">
+		    <el-button @click="lossVisible = false">取 消</el-button>
+		    <el-button type="primary" @click="turnLoss">确 定</el-button>
+		  </div>
+		</el-dialog>
+		
+		<el-dialog title="解冻" :visible.sync="normalVisible">
+			<span>确认冻结所有选中会员？</span>
+		  <div slot="footer" class="dialog-footer">
+		    <el-button @click="normalVisible = false">取 消</el-button>
+		    <el-button type="primary" @click="turnNormal">确 定</el-button>
+		  </div>
+		</el-dialog>
 	</div>
 	
 </template>
@@ -69,7 +102,15 @@
 		        rechargeForm: {  //////充值表单
 		        	amount: ''
 		        },
-		        rechargeVisible: false  //////充值弹框是否可见
+		        changePasswordForm: {
+		        	old: '',
+		        	newPass: '',
+		        	newConfirm: ''
+		        },
+		        rechargeVisible: false,  //////充值弹框是否可见
+		        changePasswordVisible: false,  /////修改密码弹框是否可见
+		        lossVisible: false,   /////冻结弹框是否可见
+		        normalVisible: false  /////解冻弹框是否可见
 			}
 		},
 		methods:{
@@ -94,7 +135,7 @@
 		   		if (res.status == '1') {
 		   			this.memberList = res.result.list
 		   			this.memberList.forEach(item => {
-		   				item.memberStatus = item.memberStatus ? '正常' : '挂失中'
+		   				item.memberStatus = item.memberStatus ? '正常' : '冻结中'
 		   			})
 		   		}
 		   	})
@@ -138,6 +179,79 @@
 					this.$message(res.msg)
 				}
 		   	})
+		   },
+		   showChangePass() {   ///显示修改密码弹框
+		   	if (this.memberSelected.length == 0) {
+		   		this.$message('请选中一个要修改的会员对象')
+		   	} else if (this.memberSelected.length >1) {
+		   		this.$message('最多选择一个')
+		   	} else {
+		   		this.changePasswordVisible = true
+		   	}
+		   },
+		   changePassword() {   /////修改密码
+		   	this.changePasswordVisible = false
+		   	let params = {
+		   		memberCard: this.memberSelected[0].memberCell,
+		   		old: this.changePasswordForm.old,
+		   		newPass: this.changePasswordForm.newPass
+		   	}
+		   	this.$http.post('/members/changePass', params)
+		   	.then(res => {
+		   		res = res.data
+	   			this.$message(res.msg)
+		   	})
+		   },
+		   showLoss() {
+		   	if (this.memberSelected.length == 0) {
+		   		this.$message('请选中要修改的会员对象')
+		   	} else {
+		   		this.lossVisible = true
+		   	}
+		   },
+		   showNormal() {
+		   	if (this.memberSelected.length == 0) {
+		   		this.$message('请选中要修改的会员对象')
+		   	} else {
+		   		this.normalVisible = true
+		   	}
+		   },
+		   turnLoss() {  /////冻结
+		   	this.lossVisible = false
+		   	let params = {
+		   		members: this.memberSelected
+		   	}
+		   	this.$http.post('/members/loss', params)
+		   	.then(res => {
+		   		res = res.data
+		   		this.$message(res.msg)
+	   			this.getMemberList()
+		   	})
+		   },
+		   turnNormal() {  ////解冻
+		   	this.normalVisible = false
+		   	let params = {
+		   		members: this.memberSelected
+		   	}
+		   	this.$http.post('/members/normal', params)
+		   	.then(res => {
+		   		res = res.data
+		   		this.$message(res.msg)
+	   			this.getMemberList()
+		   	})
+		   },
+		   memberEdit() {  ////修改会员信息
+		   	if (this.memberSelected.length == 0) {
+		   		this.$message('请选中一个要修改的会员对象')
+		   	} else if (this.memberSelected.length >1) {
+		   		this.$message('最多选择一个')
+		   	} else {
+		   		this.$router.push({
+		   		  name: 'memberAdd',
+		          path: '/backEnd/memberAdd',
+		          params: {memberCard: this.memberSelected[0].memberCell}
+		        })
+		   	}
 		   }
 		},
 		mounted() {
