@@ -11,7 +11,7 @@ router.get('/all', (req, res, next) => {
 				return res.json({
 					status: '0',
 					msg: err.message
-				});
+				})
 			}
 			return res.json({
 				status: '1',
@@ -20,7 +20,7 @@ router.get('/all', (req, res, next) => {
 					count: doc.length,
 					list: doc
 				}
-			});
+			})
 		})
 })
 
@@ -84,6 +84,34 @@ router.post('/memberAdd', (req, res, next) => {
 	let newMember = req.body
 	let {memberCard} = req.body
 	Member.findOne({memberCard}, (err, doc) => {
+		if (doc != null) {
+			return res.json({
+	          status: '0',
+	          msg: '会员已存在'
+	        })
+		} else {   /////////新增会员
+			Member.create(newMember, (err) => {
+				if (err) {
+					return res.json({
+						status: '0',
+						msg: '新增失败'
+					})
+				} else {
+					return res.json({
+						status: '1',
+						msg: '新增会员成功'
+					})
+				}
+			})
+		}
+	})
+})
+
+//////////会员修改
+router.post('/memberEdit', (req, res, next) => {
+	let newMember = req.body
+	let {memberCard} = req.body
+	Member.findOne({memberCard}, (err, doc) => {
 		if (doc != null) {   /////////修改会员
 			doc.memberCard = newMember.memberCard
 			doc.memberCell = newMember.memberCell
@@ -104,19 +132,10 @@ router.post('/memberAdd', (req, res, next) => {
 		          msg: '修改成功'
 		        })
 			})
-		} else {   /////////新增会员
-			Member.create(newMember, (err) => {
-				if (err) {
-					return res.json({
-						status: '0',
-						msg: '新增失败'
-					})
-				} else {
-					return res.json({
-						status: '1',
-						msg: '新增会员成功'
-					})
-				}
+		} else {
+			return res.json({
+				status: '0',
+				msg: '修改失败'
 			})
 		}
 	})

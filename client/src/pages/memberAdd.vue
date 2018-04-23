@@ -10,17 +10,14 @@
 			<el-col :span='16' class="myForm">
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px">
 					<el-form-item label="会员手机号" prop="memberCell">
-						<el-input v-model="ruleForm.memberCell" type='number'></el-input>
+						<el-input v-model="ruleForm.memberCell" type='number' :disabled='isEdit'></el-input>
 					</el-form-item>
 					<el-form-item label="会员卡号" prop="memberCard">
 						<el-input v-model="ruleForm.memberCell" readonly></el-input>
 					</el-form-item>
 					<el-form-item label="会员等级" prop='memberGrade'>
 						<el-select v-model="ruleForm.memberGrade" style='width: 100%;'>
-							<el-option label="普通会员" value="普通会员"></el-option>
-							<el-option label="白银会员" value="白银会员"></el-option>
-							<el-option label="黄金会员" value="黄金会员"></el-option>
-							<el-option label="钻石会员" value="钻石会员"></el-option>
+							<el-option v-for="(grade, index) in gradeList" :key="index" :label="grade.gradeName" :value="grade.gradeName"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="会员支付密码" prop="memberPassword">
@@ -54,6 +51,10 @@
 		data() {
 			return {
 //				imageUrl: '',
+				isEdit: false, //////标记是否为修改
+				gradeList: [{
+					gradeName:''
+				}],
 				ruleForm: {
 					memberCell: '',
 					memberCard: '',
@@ -103,19 +104,33 @@
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
 						this.ruleForm.memberCard = this.ruleForm.memberCell
-						
-						this.$http.post('/members/memberAdd', this.ruleForm)
-						.then(res => {
-							res = res.data
-							if (res.status == '1') {
-								this.$message(res.msg)
-								this.$router.push({
-						          path: '/backEnd/memberList'
-						        })
-							} else {
-								this.$message(res.msg)
-							}
-						})
+						if (this.isEdit) {
+							this.$http.post('/members/memberEdit', this.ruleForm)
+							.then(res => {
+								res = res.data
+								if (res.status == '1') {
+									this.$message(res.msg)
+									this.$router.push({
+							          path: '/backEnd/memberList'
+							        })
+								} else {
+									this.$message(res.msg)
+								}
+							})
+						} else {
+							this.$http.post('/members/memberAdd', this.ruleForm)
+							.then(res => {
+								res = res.data
+								if (res.status == '1') {
+									this.$message(res.msg)
+									this.$router.push({
+							          path: '/backEnd/memberList'
+							        })
+								} else {
+									this.$message(res.msg)
+								}
+							})
+						}
 					} else {
 						return false;
 					}
@@ -137,6 +152,15 @@
 						this.$message(res.msg)
 					}
 				})
+			},
+			getGrade() {
+				this.$http.get('/grades/list')
+				.then(res => {
+					res = res.data
+					if(res.status == '1') {
+						this.gradeList = res.result.list
+					}
+				})
 			}
 //			handleAvatarSuccess(res, file) {
 //				this.imageUrl = URL.createObjectURL(file.raw);
@@ -156,9 +180,10 @@
 		},
 		mounted() {
 			if (this.$route.params.memberCard) {
+				this.isEdit = true
 				this.getMember(this.$route.params.memberCard)
 			}
-			
+			this.getGrade()
 		}
 	}
 </script>

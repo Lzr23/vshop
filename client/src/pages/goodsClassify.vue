@@ -7,8 +7,9 @@
 		</div>
 		<el-table
 		    ref="multipleTable"
-		    :data="tableData"
+		    :data="classifyList"
 		    tooltip-effect="dark"
+		     v-loading="loading"
 		    style="width: 100%"
 		    @selection-change="handleSelectionChange">
 		    <el-table-column type="selection"></el-table-column>
@@ -17,7 +18,12 @@
 		    </el-table-column>
 		</el-table>
 		<div class="myPagination">
-			<el-pagination background layout="prev, pager, next" :total="100">
+			<el-pagination
+				background
+				layout="prev, pager, next"
+				:current-page.sync="page"
+      			@current-change="handleCurrentChange"
+				:total="total">
 			</el-pagination>
 		</div>
 	</div>
@@ -28,27 +34,65 @@
 	export default {
 		data() {
 			return {
-				findContent: '',  ////搜索内容
-				tableData: [{   ////表格数据
-		          name: '休闲裤',
-		          parent: '下装'
-		        }, {
-		          name: '休闲裤',
-		          parent: '下装'
-		        }, {
-		          name: '休闲裤',
-		          parent: '下装'
-		        }, {
-		          name: '休闲裤',
-		          parent: '下装'
-		        }],
+				page: 1, /////当前第几页
+				pageSize: 7, ///////一页7条数据
+				total: 0, /////分类总数
+				loading: false, // 是否正在加载
+				
+				classifyList: [   ////分类列表
+//				{   
+//		          name: '休闲裤',
+//		          parent: '下装'
+//		        }, {
+//		          name: '休闲裤',
+//		          parent: '下装'
+//		        }, {
+//		          name: '休闲裤',
+//		          parent: '下装'
+//		        }, {
+//		          name: '休闲裤',
+//		          parent: '下装'
+//		        }
+		        ],
 		        multipleSelection: []
 			}
 		},
 		methods:{
 			handleSelectionChange(val) {
-	        this.multipleSelection = val;
-	      }
+		      this.multipleSelection = val;
+		   },
+		   handleCurrentChange(val) {  ////改变当前页数
+		   	this.page = val
+		   	this.getClassify()
+		   },
+		   getClassify() {
+		   	var params = {
+		   		page: this.page,
+        		pageSize: this.pageSize
+		   	}
+		   	this.loading = true
+		   	this.$http.get('/classifys/list', {params})
+		   	.then(res => {
+		   		res = res.data
+		   		this.loading = false
+		   		if (res.status == '1') {
+		   			this.classifyList = res.result.list
+		   		}
+		   	})
+		   },
+		   getAll() {
+		   	this.$http.get('/classifys/all')
+		   	.then(res => {
+		   		res = res.data
+		   		if (res.status == '1') {
+		   			this.total = res.count
+		   		}
+		   	})
+		   }
+		},
+		mounted() {
+			this.getClassify()
+			this.getAll()
 		}
 	}
 </script>

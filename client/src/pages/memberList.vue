@@ -94,7 +94,7 @@
 				findContent: '',  ////搜索内容
 				memberTotal: 0, ////会员总数
 				page: 1,  /////当前第几页
-				pageSize: 7,  ///////一页10条数据
+				pageSize: 7,  ///////一页7条数据
 				loading: false,       // 是否正在加载
 				memberList: [],  /////会员列表
 		        memberSelected: [],  /////选中的会员
@@ -102,7 +102,7 @@
 		        rechargeForm: {  //////充值表单
 		        	amount: ''
 		        },
-		        changePasswordForm: {
+		        changePasswordForm: {  ////修改密码表单
 		        	old: '',
 		        	newPass: '',
 		        	newConfirm: ''
@@ -202,14 +202,14 @@
 	   			this.$message(res.msg)
 		   	})
 		   },
-		   showLoss() {
+		   showLoss() {  ////显示冻结弹框
 		   	if (this.memberSelected.length == 0) {
 		   		this.$message('请选中要修改的会员对象')
 		   	} else {
 		   		this.lossVisible = true
 		   	}
 		   },
-		   showNormal() {
+		   showNormal() {   /////显示解冻弹框
 		   	if (this.memberSelected.length == 0) {
 		   		this.$message('请选中要修改的会员对象')
 		   	} else {

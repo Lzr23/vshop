@@ -17,6 +17,12 @@ module.exports = {
 			'/members/**': {
 				target: 'http://localhost:3000'
 			},
+			'/grades/**': {
+				target: 'http://localhost:3000'
+			},
+			'/classifys/**': {
+				target: 'http://localhost:3000'
+			},
 			'/api/**': {
 				target: 'http://localhost:3000',
 				pathRewrite: {
