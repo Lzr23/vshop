@@ -133,7 +133,7 @@
 			},
 			showGradeDelete() {
 				if (this.gradeSelected.length == 0) {
-		   			this.$message('请选中要删除的会员对象')
+		   			this.$message('请选中要删除的等级')
 			   	} else {
 			   		this.deleteVisible = true
 			   	}

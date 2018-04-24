@@ -33,7 +33,7 @@ router.post('/gradeAdd', (req, res, next) => {
 	          status: '0',
 	          msg: '等级已存在'
 	        })
-		} else {   /////////新增会员
+		} else {   /////////新增等级
 			Grade.create(newGrade, (err) => {
 				if (err) {
 					return res.json({
@@ -56,7 +56,7 @@ router.post('/gradeEdit', (req, res, next) => {
 	let newGrade = req.body
 	let {gradeName} = req.body
 	Grade.findOne({gradeName}, (err, doc) => {
-		if (doc != null) {   /////////修改会员
+		if (doc != null) {   /////////修改等级
 			doc.gradeName = newGrade.gradeName
 			doc.gradeDiscount = newGrade.gradeDiscount
 			doc.save((err, doc1) => {

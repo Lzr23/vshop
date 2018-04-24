@@ -11,8 +11,8 @@
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px">
 					<el-form-item label="商品分类" prop="goodsClassify">
 						<el-select v-model="ruleForm.goodsClassify" placeholder="请选择">
-							<el-option-group v-for="group in options3" :key="group.label" :label="group.label">
-								<el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+							<el-option-group v-for="classify in classifyP" :key="classify.classifyName" :label="classify.classifyName">
+								<el-option v-for="item in classify.classifys" :key="item.classifyName" :label="item.classifyName" :value="item.classifyName">
 								</el-option>
 							</el-option-group>
 						</el-select>
@@ -96,6 +96,7 @@
 						trigger: 'blur'
 					}]
 				},
+				classifyP: [],
 				options3: [{
 					label: '热门城市',
 					options: [{
@@ -152,7 +153,19 @@
 					this.$message.error('上传头像图片大小不能超过 2MB!');
 				}
 				return isJPG && isLt2M;
+			},
+			getClassify() {
+				this.$http.get('/classifys/goodsClassify')
+				.then(res => {
+					res = res.data
+					if (res.status == '1') {
+			   			this.classifyP = res.result.list
+			   		}
+				})
 			}
+		},
+		mounted() {
+			this.getClassify()
 		}
 	}
 </script>

@@ -7,7 +7,7 @@ require('./db')
 var usersRouter = require('./routes/users');
 var membersRouter = require('./routes/members');
 var gradesRouter = require('./routes/grades');
-var classifyRouter = require('./routers/classifys')
+var classifyRouter = require('./routes/classifys')
 
 var app = express();
 
@@ -18,6 +18,6 @@ app.use(cookieParser());
 app.use('/users', usersRouter);
 app.use('/members', membersRouter);
 app.use('/grades', gradesRouter);
-app.use('/classifys'. classifyRouter)
+app.use('/classifys', classifyRouter)
 
 module.exports = app;
