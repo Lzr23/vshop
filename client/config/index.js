@@ -23,6 +23,9 @@ module.exports = {
 			'/classifys/**': {
 				target: 'http://localhost:3000'
 			},
+			'/goods/**': {
+				target: 'http://localhost:3000'
+			},
 			'/api/**': {
 				target: 'http://localhost:3000',
 				pathRewrite: {

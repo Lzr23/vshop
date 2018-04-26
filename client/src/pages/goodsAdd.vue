@@ -2,26 +2,24 @@
 	<div>
 		<el-row>
 			<el-col :span="8">
-				<el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-					<img v-if="imageUrl" :src="imageUrl" class="avatar">
-					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-				</el-upload>
+				<form action="/goods/upImg" method="post" enctype='multipart/form-data' target="id_iframe">
+					<input name='inputFile' type="file" multiple='mutiple'/>
+					<input type="submit" @click="upImg" value="上传图片"/>
+				</form>
+				<iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
 			</el-col>
 			<el-col :span='12' class="myForm">
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px">
-					<el-form-item label="商品分类" prop="goodsClassify">
-						<el-select v-model="ruleForm.goodsClassify" placeholder="请选择">
+					<el-form-item label="商品分类" prop="goodsClassifyC">
+						<el-select v-model="ruleForm.goodsClassifyC" placeholder="请选择">
 							<el-option-group v-for="classify in classifyP" :key="classify.classifyName" :label="classify.classifyName">
 								<el-option v-for="item in classify.classifys" :key="item.classifyName" :label="item.classifyName" :value="item.classifyName">
 								</el-option>
 							</el-option-group>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="商品编码" prop="goodsNo">
-						<el-input v-model="ruleForm.goodsNo"></el-input>
-					</el-form-item>
-					<el-form-item label="自动生成编码">
-						<el-switch v-model="ruleForm.delivery"></el-switch>
+					<el-form-item label="商品编码" prop="goodsId">
+						<el-input v-model="ruleForm.goodsId" readonly></el-input>
 					</el-form-item>
 					<el-form-item label="商品名称" prop='goodsName'>
 						<el-input v-model="ruleForm.goodsName"></el-input>
@@ -53,24 +51,25 @@
 	export default {
 		data() {
 			return {
-				imageUrl: '',
 				ruleForm: {
-					goodsClassify: '',
-					goodsNo: '',
-					delivery: true,
+					goodsId: '',
+					goodsImg: '',
 					goodsName: '',
+					goodsClassifyC: '',
 					goodsIn: '',
 					goodsOut: '',
-					goodsStock: ''
+					goodsStock: '',
+					goodsStatus: 1,
+					goodsRemark: ''
 				},
 				rules: {
-					goodsClassify: [{
+					goodsClassifyC: [{
 							required: true,
 							message: '请选择商品分类',
 							trigger: 'blur'
 						}
 					],
-					goodsNo: [{
+					goodsId: [{
 						required: true,
 						message: '请输入商品编码',
 						trigger: 'blur'
@@ -96,40 +95,27 @@
 						trigger: 'blur'
 					}]
 				},
-				classifyP: [],
-				options3: [{
-					label: '热门城市',
-					options: [{
-						value: 'Shanghai',
-						label: '上海'
-					}, {
-						value: 'Beijing',
-						label: '北京'
-					}]
-				}, {
-					label: '城市名',
-					options: [{
-						value: 'Chengdu',
-						label: '成都'
-					}, {
-						value: 'Shenzhen',
-						label: '深圳'
-					}, {
-						value: 'Guangzhou',
-						label: '广州'
-					}, {
-						value: 'Dalian',
-						label: '大连'
-					}]
-				}]
+				classifyP: []  ////分类列表
 			}
 		},
 		methods: {
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-						alert('submit!');
-						console.log(valid)
+						var url = document.getElementById('id_iframe').contentDocument.body.textContent
+						url = url.substr('8')
+						url = url.substr('0', url.length-2)
+						this.ruleForm.goodsImg = '../../static/images/' + url
+						this.$http.post('/goods/add', this.ruleForm)
+						.then(res => {
+							res = res.data
+							this.$message(res.msg)
+					   		if (res.status == '1') {
+					   			this.$router.push({
+					   				path: '/backEnd/goodsList'
+					   			})
+					   		}
+						})
 					} else {
 						console.log('error submit!!');
 						return false;
@@ -139,20 +125,8 @@
 			resetForm(formName) {
 				this.$refs[formName].resetFields();
 			},
-			handleAvatarSuccess(res, file) {
-				this.imageUrl = URL.createObjectURL(file.raw);
-			},
-			beforeAvatarUpload(file) {
-				const isJPG = file.type === 'image/jpeg';
-				const isLt2M = file.size / 1024 / 1024 < 2;
-
-				if(!isJPG) {
-					this.$message.error('上传头像图片只能是 JPG 格式!');
-				}
-				if(!isLt2M) {
-					this.$message.error('上传头像图片大小不能超过 2MB!');
-				}
-				return isJPG && isLt2M;
+			upImg() {
+				this.$message('上传成功')
 			},
 			getClassify() {
 				this.$http.get('/classifys/goodsClassify')
@@ -162,10 +136,15 @@
 			   			this.classifyP = res.result.list
 			   		}
 				})
+			},
+			getGoodsId(){
+				let code = Date.parse(new Date()) - parseInt(Math.random()*100)
+				this.ruleForm.goodsId = code
 			}
 		},
 		mounted() {
 			this.getClassify()
+			this.getGoodsId()
 		}
 	}
 </script>

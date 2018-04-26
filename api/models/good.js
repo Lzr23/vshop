@@ -2,6 +2,7 @@ let mongoose = require('../db');
 
 let goodsSchema = new mongoose.Schema({
 	"goodsId": String, //商品编号
+	"goodsImg": String, //商品图片
 	"goodsName": String, //商品名称
 	"goodsClassifyP": String, //商品大分类
 	"goodsClassifyC": String, //商品小分类
