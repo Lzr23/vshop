@@ -79,7 +79,7 @@ router.get('/list', (req, res, next) => {
 		})
 })
 
-
+///////////新增会员
 router.post('/memberAdd', (req, res, next) => {
 	let newMember = req.body
 	let {memberCard} = req.body

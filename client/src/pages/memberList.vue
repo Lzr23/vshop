@@ -2,11 +2,11 @@
 	<div>
 		<div class="table-function">
 			<el-button type="primary" plain size='small' @click="gotoAdd">新增</el-button>
+			<el-button type="primary" plain size='small' @click='gotoEdit'>修改</el-button>
 			<el-button type="primary" plain size='small' @click='showRecharge'>充值</el-button>
 			<el-button type="primary" plain size='small' @click='showChangePass'>修改密码</el-button>
 			<el-button type="primary" plain size='small' @click='showLoss'>冻结</el-button>
 			<el-button type="primary" plain size='small' @click='showNormal'>解冻</el-button>
-			<el-button type="primary" plain size='small' @click='memberEdit'>修改</el-button>
 		</div>
 		<div class="table-search">
 			<el-input placeholder="输入会员卡号" prefix-icon="el-icon-search" v-model="findContent"></el-input>
@@ -204,14 +204,14 @@
 		   },
 		   showLoss() {  ////显示冻结弹框
 		   	if (this.memberSelected.length == 0) {
-		   		this.$message('请选中要修改的会员对象')
+		   		this.$message('请选中要冻结的会员对象')
 		   	} else {
 		   		this.lossVisible = true
 		   	}
 		   },
 		   showNormal() {   /////显示解冻弹框
 		   	if (this.memberSelected.length == 0) {
-		   		this.$message('请选中要修改的会员对象')
+		   		this.$message('请选中要解冻的会员对象')
 		   	} else {
 		   		this.normalVisible = true
 		   	}
@@ -240,7 +240,7 @@
 	   			this.getMemberList()
 		   	})
 		   },
-		   memberEdit() {  ////修改会员信息
+		   gotoEdit() {  ////修改会员信息
 		   	if (this.memberSelected.length == 0) {
 		   		this.$message('请选中一个要修改的会员对象')
 		   	} else if (this.memberSelected.length >1) {

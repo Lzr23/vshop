@@ -1,12 +1,6 @@
 <template>
 	<div>
 		<el-row>
-			<!--<el-col :span="8">
-				<el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-					<img v-if="imageUrl" :src="imageUrl" class="avatar">
-					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-				</el-upload>
-			</el-col>-->
 			<el-col :span='16' class="myForm">
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px">
 					<el-form-item label="会员手机号" prop="memberCell">
@@ -50,7 +44,6 @@
 	export default {
 		data() {
 			return {
-//				imageUrl: '',
 				isEdit: false, //////标记是否为修改
 				gradeList: [{
 					gradeName:''
@@ -162,21 +155,6 @@
 					}
 				})
 			}
-//			handleAvatarSuccess(res, file) {
-//				this.imageUrl = URL.createObjectURL(file.raw);
-//			},
-//			beforeAvatarUpload(file) {
-//				const isJPG = file.type === 'image/jpeg';
-//				const isLt2M = file.size / 1024 / 1024 < 2;
-//
-//				if(!isJPG) {
-//					this.$message.error('上传头像图片只能是 JPG 格式!');
-//				}
-//				if(!isLt2M) {
-//					this.$message.error('上传头像图片大小不能超过 2MB!');
-//				}
-//				return isJPG && isLt2M;
-//			}
 		},
 		mounted() {
 			if (this.$route.params.memberCard) {

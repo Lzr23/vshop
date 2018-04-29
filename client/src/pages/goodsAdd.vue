@@ -51,6 +51,7 @@
 	export default {
 		data() {
 			return {
+				isEdit: false, //////标记是否为修改
 				ruleForm: {
 					goodsId: '',
 					goodsImg: '',
@@ -102,20 +103,38 @@
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-						var url = document.getElementById('id_iframe').contentDocument.body.textContent
-						url = url.substr('8')
-						url = url.substr('0', url.length-2)
-						this.ruleForm.goodsImg = '../../static/images/' + url
-						this.$http.post('/goods/add', this.ruleForm)
-						.then(res => {
-							res = res.data
-							this.$message(res.msg)
-					   		if (res.status == '1') {
-					   			this.$router.push({
-					   				path: '/backEnd/goodsList'
-					   			})
-					   		}
-						})
+						if (this.isEdit) {
+							var url = document.getElementById('id_iframe').contentDocument.body.textContent
+							url = url.substr('8')
+							url = url.substr('0', url.length-2)
+							this.ruleForm.goodsImg = '../../static/images/' + url
+							this.$http.post('/goods/edit', this.ruleForm)
+							.then(res => {
+								res = res.data
+								this.$message(res.msg)
+						   		if (res.status == '1') {
+						   			this.$router.push({
+						   				path: '/backEnd/goodsList'
+						   			})
+						   		}
+							})
+						} else {
+							var url = document.getElementById('id_iframe').contentDocument.body.textContent
+							url = url.substr('8')
+							url = url.substr('0', url.length-2)
+							this.ruleForm.goodsImg = '../../static/images/' + url
+							this.$http.post('/goods/add', this.ruleForm)
+							.then(res => {
+								res = res.data
+								this.$message(res.msg)
+						   		if (res.status == '1') {
+						   			this.$router.push({
+						   				path: '/backEnd/goodsList'
+						   			})
+						   		}
+							})
+						}
+						
 					} else {
 						console.log('error submit!!');
 						return false;
@@ -124,6 +143,20 @@
 			},
 			resetForm(formName) {
 				this.$refs[formName].resetFields();
+			},
+			getGoods(goodsId) {
+				let params = {
+					goodsId
+				}
+				this.$http.get('/goods/getGoods', {params})
+				.then(res => {
+					res = res.data
+					if (res.status == '1') {
+						this.ruleForm = res.result
+					} else {
+						this.$message(res.msg)
+					}
+				})
 			},
 			upImg() {
 				this.$message('上传成功')
@@ -145,6 +178,10 @@
 		mounted() {
 			this.getClassify()
 			this.getGoodsId()
+			if (this.$route.params.goodsId) {
+				this.isEdit = true
+				this.getGoods(this.$route.params.goodsId)
+			}
 		}
 	}
 </script>
