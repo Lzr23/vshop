@@ -3,8 +3,9 @@
 		<el-row>
 			<el-col :span="8">
 				<form action="/goods/upImg" method="post" enctype='multipart/form-data' target="id_iframe">
-					<input name='inputFile' type="file" multiple='mutiple'/>
-					<input type="submit" @click="upImg" value="上传图片"/>
+					<input name='inputFile' id="inputFile" type="file" multiple='mutiple'/>
+					<img class="goodsImg" @click="imgChoice" :src="ruleForm.goodsImg" />
+					<input class="imgSubmit" type="submit" @click="upImg" value="上传图片"/>
 				</form>
 				<iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
 			</el-col>
@@ -31,7 +32,7 @@
 						<el-input v-model="ruleForm.goodsOut" type='number'></el-input>
 					</el-form-item>
 					<el-form-item label="商品库存" prop="goodsStock">
-						<el-input v-model="ruleForm.goodsStock" type='number'></el-input>
+						<el-input v-model="ruleForm.goodsStock" type='number' :disabled='isEdit'></el-input>
 					</el-form-item>
 					<el-form-item label="备注" prop="remark">
 						<el-input type="textarea" v-model="ruleForm.remark"></el-input>
@@ -54,7 +55,7 @@
 				isEdit: false, //////标记是否为修改
 				ruleForm: {
 					goodsId: '',
-					goodsImg: '',
+					goodsImg: '../../static/default.png',
 					goodsName: '',
 					goodsClassifyC: '',
 					goodsIn: '',
@@ -158,6 +159,9 @@
 					}
 				})
 			},
+			imgChoice() {
+				document.getElementById('inputFile').click()
+			},
 			upImg() {
 				this.$message('上传成功')
 			},
@@ -212,5 +216,26 @@
 		width: 178px;
 		height: 178px;
 		display: block;
+	}
+	#inputFile{
+		display: none;
+	}
+	.goodsImg{
+		width: 140px;
+		height: 140px;
+		cursor: pointer;
+		display: block;
+		margin:  0 auto;
+	}
+	.imgSubmit{
+		width: 140px;
+		height: 30px;
+		border: none;
+		outline: none;
+		color: #FFFFFF;
+		background: #009DE6;
+		border-radius: 5px;
+		display: block;
+		margin: 10px auto;
 	}
 </style>

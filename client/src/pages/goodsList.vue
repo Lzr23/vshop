@@ -8,7 +8,7 @@
     </div>
     <div class="table-search">
       <el-input placeholder="输入产品名称/编码" prefix-icon="el-icon-search" v-model="findContent"></el-input>
-      <el-button type="primary" plain size='small'>查询</el-button>
+      <el-button type="primary" plain size='small' @click="getGoodsList()">查询</el-button>
     </div>
     <el-table ref="multipleTable" :data="goodsList" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
@@ -32,7 +32,7 @@
 		</div>
     
     <el-dialog title="下架" :visible.sync="downVisible">
-			<span>确认冻结所有选中会员？</span>
+			<span>确认下架所有选中商品？</span>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="downVisible = false">取 消</el-button>
 		    <el-button type="primary" @click="turnDown">确 定</el-button>
@@ -40,7 +40,7 @@
 		</el-dialog>
 		
 		<el-dialog title="上架" :visible.sync="upVisible">
-			<span>确认冻结所有选中会员？</span>
+			<span>确认上架所有选中商品？</span>
 		  <div slot="footer" class="dialog-footer">
 		    <el-button @click="upVisible = false">取 消</el-button>
 		    <el-button type="primary" @click="turnUp">确 定</el-button>
@@ -110,21 +110,21 @@
 	        })
 			  },
 			  showUp() {
-			  	if (this.memberSelected.length == 0) {
+			  	if (this.goodsSelected.length == 0) {
 			   		this.$message('请选中要上架的商品')
 			   	} else {
 			   		this.upVisible = true
 			   	}
 			  },
 			  showDown() {
-			  	if (this.memberSelected.length == 0) {
+			  	if (this.goodsSelected.length == 0) {
 			   		this.$message('请选中要上架的商品')
 			   	} else {
 			   		this.downVisible = true
 			   	}
 			  },
 			  turnUp() {   ////////商品上架
-			  	this.UpVisible = false
+			  	this.upVisible = false
 			   	let params = {
 			   		goods: this.goodsSelected
 			   	}

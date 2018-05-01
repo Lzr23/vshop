@@ -46,7 +46,7 @@ router.post('/add', (req, res, next) => {
 			})
 		} else {
 			newGood.goodsClassifyP = doc.classifyP
-			Good.create(newGo od, (err) => {
+			Good.create(newGood, (err) => {
 				if (err) {
 					return res.json({
 						status: '0',
@@ -114,7 +114,8 @@ router.get('/list', (req, res, next) => {
 	let params
 	if (findContent) {
 		params = {  //查询时候的过滤参数
-			goodsId: {$regex: findContent}
+			$or: [{goodsId: {$regex: findContent}},
+			{goodsName: {$regex: findContent}}]
 		}
 	} else {
 		params = {}
