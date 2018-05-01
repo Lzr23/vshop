@@ -5,12 +5,13 @@
       <el-button type="primary" plain size='small' @click="gotoEdit">修改</el-button>
       <el-button type="primary" plain size='small' @click="showUp">上架</el-button>
       <el-button type="primary" plain size='small' @click="showDown">下架</el-button>
+      <el-button type="primary" plain size='small' @click="showStock">进货</el-button>
     </div>
     <div class="table-search">
-      <el-input placeholder="输入产品名称/编码" prefix-icon="el-icon-search" v-model="findContent"></el-input>
+      <el-input placeholder="输入产品名称/编码" clearable prefix-icon="el-icon-search" v-model="findContent"></el-input>
       <el-button type="primary" plain size='small' @click="getGoodsList()">查询</el-button>
     </div>
-    <el-table ref="multipleTable" :data="goodsList" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTable" :data="goodsList" v-loading="loading" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection"></el-table-column>
       <el-table-column prop="goodsId" label="编码"></el-table-column>
       <el-table-column prop="goodsName" label="名称" show-overflow-tooltip></el-table-column>
@@ -18,6 +19,7 @@
       <el-table-column prop="goodsClassifyC" label="小分类"></el-table-column>
       <el-table-column prop="goodsIn" label="进价"></el-table-column>
       <el-table-column prop="goodsOut" label="售价"></el-table-column>
+      <el-table-column prop="goodsStock" label="库存"></el-table-column>
       <el-table-column prop="goodsStatus" label="状态"></el-table-column>
       </el-table-column>
     </el-table>
@@ -46,6 +48,30 @@
 		    <el-button type="primary" @click="turnUp">确 定</el-button>
 		  </div>
 		</el-dialog>
+		
+		<el-dialog title="进货" :visible.sync="stockVisible">
+			<table class="stockTable">
+				<thead>
+					<th>商品编号</th>
+					<th>商品名称</th>
+					<th>进货数量</th>
+					<th>小计</th>
+				</thead>
+				<tbody>
+					<tr v-for="goods in goodsSelected">
+						<td>{{goods.goodsId}}</td>
+						<td>{{goods.goodsName}}</td>
+						<td><el-input v-model="goods.quantity" min="0" type="number" placeholder="请输入进货数量"></el-input></td>
+						<td>{{goods.goodsIn * goods.quantity}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3 style="padding: 10px 20px;">合计:<span class="colorRed">{{stockTotal}}</span>元</h3>
+		  <div slot="footer" class="dialog-footer">
+		    <el-button @click="stockVisible = false">取 消</el-button>
+		    <el-button type="primary" @click="stockIn">确 定</el-button>
+		  </div>
+		</el-dialog>
   </div>
 
 </template>
@@ -65,8 +91,18 @@
           
           downVisible: false,  ////下架弹框
           upVisible: false,   /////上架弹框
+          stockVisible: false,  ////进货弹框
           
         }
+      },
+      computed: {
+      	stockTotal () {
+      		var total = 0
+      		this.goodsSelected.forEach(item => {
+      			total += item.goodsIn * item.quantity
+      		})
+      		return total
+      	}
       },
       methods: {
         handleSelectionChange(val) {
@@ -123,6 +159,17 @@
 			   		this.downVisible = true
 			   	}
 			  },
+			  showStock() {
+			  	if (this.goodsSelected.length == 0) {
+			   		this.$message('请选中要进货的商品')
+			   	} else {
+			   		this.goodsSelected.forEach(item => {
+	          	this.$set(item, "quantity", 0)
+	          	this.$set(item, "total", 0)
+	          })
+			   		this.stockVisible = true
+			   	}
+			  },
 			  turnUp() {   ////////商品上架
 			  	this.upVisible = false
 			   	let params = {
@@ -159,6 +206,18 @@
 			          params: {goodsId: this.goodsSelected[0].goodsId}
 			        })
 			   	}
+			  },
+			  stockIn() {  //////进货
+			  	this.stockVisible = false
+			  	let params = {
+			  		goodsList: this.goodsSelected
+			  	}
+			  	this.$http.post('/stocks/goodsIn', params)
+			  	.then(res => {
+			  		res = res.data
+			  		this.$message(res.msg)
+			  		this.getGoodsList()
+			  	})
 			  }
       },
       mounted() {
@@ -168,4 +227,15 @@
   }
 </script>
 
-<style></style>
+<style>
+	.stockTable{
+		width: 100%;
+		text-align: center;
+	}
+	.stockTable th{
+		text-align: center;
+	}
+	.stockTable input{
+		width: 100px;
+	}
+</style>

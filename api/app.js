@@ -9,6 +9,7 @@ var membersRouter = require('./routes/members');
 var gradesRouter = require('./routes/grades');
 var classifyRouter = require('./routes/classifys')
 var goodsRouter = require('./routes/goods')
+var stocksRouter = require('./routes/stocks')
 
 var app = express();
 
@@ -21,5 +22,6 @@ app.use('/members', membersRouter);
 app.use('/grades', gradesRouter);
 app.use('/classifys', classifyRouter)
 app.use('/goods', goodsRouter)
+app.use('/stocks', stocksRouter)
 
 module.exports = app;

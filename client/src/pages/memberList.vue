@@ -9,7 +9,7 @@
 			<el-button type="primary" plain size='small' @click='showNormal'>解冻</el-button>
 		</div>
 		<div class="table-search">
-			<el-input placeholder="输入会员卡号" prefix-icon="el-icon-search" v-model="findContent"></el-input>
+			<el-input placeholder="输入会员卡号" clearable prefix-icon="el-icon-search" v-model="findContent"></el-input>
 			<el-button type="primary" plain size='small' @click="getMemberList()">查询</el-button>
 		</div>
 		<el-table

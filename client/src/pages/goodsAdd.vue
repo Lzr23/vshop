@@ -31,9 +31,6 @@
 					<el-form-item label="商品售价" prop="goodsOut">
 						<el-input v-model="ruleForm.goodsOut" type='number'></el-input>
 					</el-form-item>
-					<el-form-item label="商品库存" prop="goodsStock">
-						<el-input v-model="ruleForm.goodsStock" type='number' :disabled='isEdit'></el-input>
-					</el-form-item>
 					<el-form-item label="备注" prop="remark">
 						<el-input type="textarea" v-model="ruleForm.remark"></el-input>
 					</el-form-item>
@@ -60,7 +57,7 @@
 					goodsClassifyC: '',
 					goodsIn: '',
 					goodsOut: '',
-					goodsStock: '',
+					goodsStock: 0,
 					goodsStatus: 1,
 					goodsRemark: ''
 				},
