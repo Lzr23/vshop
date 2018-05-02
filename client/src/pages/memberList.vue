@@ -32,9 +32,10 @@
 			<el-pagination
 				background
 				layout="prev, pager, next"
+				page-size=7
 				:current-page.sync="page"
       			@current-change="handleCurrentChange"
-				:total="memberTotal">
+				:total="10">
 			</el-pagination>
 		</div>
 		
@@ -145,7 +146,7 @@
 		   	.then(res => {
 		   		res = res.data
 		   		if (res.status == '1') {
-		   			this.memberTotal = res.count
+		   			this.memberTotal = res.result.count
 		   		}
 		   	})
 		   },

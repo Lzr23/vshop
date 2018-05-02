@@ -29,6 +29,9 @@ module.exports = {
 			'/stocks/**': {
 				target: 'http://localhost:3000'
 			},
+			'/cashier/**': {
+				target: 'http://localhost:3000'
+			},
 			'/api/**': {
 				target: 'http://localhost:3000',
 				pathRewrite: {

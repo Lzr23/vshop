@@ -11,7 +11,13 @@
       <el-input placeholder="输入产品名称/编码" clearable prefix-icon="el-icon-search" v-model="findContent"></el-input>
       <el-button type="primary" plain size='small' @click="getGoodsList()">查询</el-button>
     </div>
-    <el-table ref="multipleTable" :data="goodsList" v-loading="loading" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTable"
+    	:data="goodsList"
+    	v-loading="loading"
+    	tooltip-effect="dark"
+    	style="width: 100%"
+    	@selection-change="handleSelectionChange"
+    	:row-class-name="tableRowClassName">
       <el-table-column type="selection"></el-table-column>
       <el-table-column prop="goodsId" label="编码"></el-table-column>
       <el-table-column prop="goodsName" label="名称" show-overflow-tooltip></el-table-column>
@@ -27,6 +33,7 @@
 			<el-pagination
 				background
 				layout="prev, pager, next"
+				page-size='7'
 				:current-page.sync="page"
       			@current-change="handleCurrentChange"
 				:total="goodsTotal">
@@ -136,7 +143,7 @@
 			   	.then(res => {
 			   		res = res.data
 			   		if (res.status == '1') {
-			   		this.goodsTotal = res.count
+			   		this.goodsTotal = res.result.count
 			   		}
 			   	})
 			  },
@@ -218,7 +225,16 @@
 			  		this.$message(res.msg)
 			  		this.getGoodsList()
 			  	})
-			  }
+			  },
+			  tableRowClassName({row, rowIndex}) {
+	        if (row.goodsStock == 0) {
+	          return 'danger';
+	        }
+//	        else if (rowIndex === 1) {
+//	          return 'warning';
+//	        }
+	        return '';
+	      }
       },
       mounted() {
       	this.getGoodsList()
@@ -237,5 +253,13 @@
 	}
 	.stockTable input{
 		width: 100px;
+	}
+	.el-table .danger{
+		background: #F56C6C;
+		color: #FFFFFF;
+	}
+	.el-table .warning{
+		background: #E6A23C;
+		color: #FFFFFF;
 	}
 </style>

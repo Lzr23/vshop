@@ -4,17 +4,18 @@
       <nav-header></nav-header>
     </el-header>
   	<div class='mainLeft'>
-  		<el-input
-			  placeholder="请输入会员姓名/手机号"
-			  prefix-icon="el-icon-search"
-			  size="small"
-			  v-model="memnerFindInput"
-			  clearable>
-			</el-input>
+  		<el-autocomplete
+		  v-model="memnerFindInput"
+		  :fetch-suggestions="querySearchAsync"
+		  placeholder="请输入会员手机"
+		  style="width:100%"
+		  clearable
+		  @select="handleSelect">
+		  </el-autocomplete>
 			<div class='cart'>
 				<div class='memberInfo'>
-					<p><span>会员姓名</span><span>手机号</span></p>
-					<p><span>折扣：7折</span><span>余额：300</span></p>
+					<p><span>{{member.memberCell || "会员姓名"}}</span><span>{{member.memberSex || "会员性别"}}</span></p>
+					<p><span>折扣：{{member.discount}}</span><span>余额：{{member.memberBalance}}</span></p>
 				</div>
 				<div class='cartContainer'>
 					<table class='cartTable'>
@@ -52,28 +53,28 @@
 			  prefix-icon="el-icon-search"
 			  size="small"
 			  v-model="goodsFindInput"
-			  clearable>
+			>
 			</el-input>
-			<el-tabs v-model="classifyId" @tab-click="handleClick">
-		    <el-tab-pane label="用户管理" name="c1"></el-tab-pane>
-		    <el-tab-pane label="配置管理" name="c2"></el-tab-pane>
-		    <el-tab-pane label="角色管理" name="c3"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c4"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c5"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c6"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c7"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c8"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c9"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c10"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c11"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c12"></el-tab-pane>
-		    <el-tab-pane label="定时任务补偿" name="c13"></el-tab-pane>
-		  </el-tabs>
+			<ul class="classifyList">
+				<li v-for="classify in classifys">
+			    <el-dropdown>
+			      <span class="el-dropdown-link" @click="getGoodsByClassify(classify.classifyP)">
+			        {{classify.classifyP}}<i class="el-icon-arrow-down el-icon--right"></i>
+			      </span>
+			      <el-dropdown-menu slot="dropdown">
+			      	<span v-for="classifyC in classify.classifyC" @click="getGoodsByClassify(classifyC.classifyName)">
+			      		<el-dropdown-item>{{classifyC.classifyName}}</el-dropdown-item>
+			      	</span>
+			        
+			      </el-dropdown-menu>
+			    </el-dropdown>
+				</li>
+			</ul>
 		  <ul class='goodsList'>
 		  	<li v-for="good in goodsList">
-		  			<img v-lazy="'/static/'+good.goodsPic"/>
+		  			<img v-lazy="good.goodsImg"/>
 		  			<p class='goodsName' :title='good.goodsName'>{{good.goodsName}}</p>
-		  			<p>￥:<span class='goodsPrice'>{{good.goodsPrice}}</span></p>
+		  			<p>￥:<span class='goodsPrice'>{{good.goodsOut}}</span></p>
 		  	</li>
 		  </ul>
   	</div>
@@ -85,95 +86,13 @@
   export default {
   	data() {
   		return {
-  			memnerFindInput: '',
-  			goodsFindInput: '',
-  			classifyId: 'c1',
-  			cartList: [
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
+  			memnerFindInput: '',    ///////查询会员关键字
+  			allMember: [],   //////所有会员
+        timeout:  null,   /////会员查询间隔
+  			goodsFindInput: '',     //////查询商品关键字
+  			member: {},   ///////选中会员
+  			classifys: [],     //////商品分类列表
+  			cartList: [    /////购物车列表
 	  			{
 	  				goodsName: '球衣',
 	  				goodsNum: 2,
@@ -200,81 +119,85 @@
   				goodsPic: 'goods.png',
   				goodsName: '球衣aaaaaaaaaaaaaa',
   				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
   			}
   			]
   		}
   	},
+  	components: {
+    	NavHeader
+   	},
   	computed:{
   		
   	},
   	methods: {
-  		handleClick(tab, event) {
-        console.log(tab, event);
+  		/////////////////处理会员查询
+  		querySearchAsync(queryString, cb) {
+        var restaurants = this.allMember;
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(results);
+        }, 3000 * Math.random());
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.indexOf(queryString) === 0);
+        };
+      },
+      handleSelect(item) {  /////选中会员
+      	let params = {
+      		memberCard: item.value
+      	}
+        this.$http.get('/cashier/getMember', {params})
+		   	.then(res => {
+		   		res = res.data
+		   		if (res.status == '1') {
+		   			this.member = res.result
+		   			this.member.discount = res.discount
+		   		}
+		   	})
+      },
+      getAllMember() {  ////////获取所有会员
+      	this.$http.get('/members/all')
+		   	.then(res => {
+		   		res = res.data
+		   		if (res.status == '1') {
+		   			res.result.list.forEach(item => {
+		   				let newMember = {
+		   					"value": item.memberCell
+		   				}
+		   				this.allMember.push(newMember)
+		   			})
+		   		}
+		   	})
+      },
+      getAllClassify() {  //////获取所有商品分类
+      	this.$http.get('/cashier/allClassify')
+		   	.then(res => {
+		   		res = res.data
+		   		if (res.status == '1') {
+		   			this.classifys = res.result
+		   		}
+		   	})
+      },
+      getGoodsByClassify(classifyName) {
+      	let params = {
+      		classifyName
+      	}
+      	this.$http.get('/cashier/getGoodsByClassify', {params})
+      	.then(res => {
+      		res = res.data
+      		if (res.status == '1') {
+		   			this.goodsList = res.result
+		   		}
+      	})
       }
   	},
-		components: {
-    	NavHeader
-    }
+  	mounted() {
+  		this.getAllMember()
+  		this.getAllClassify()
+  	}
+		
   }
 </script>
 
@@ -369,5 +292,17 @@
 	.goodsPrice{
 		font-size: 20px;
 		color: #FF0000;
+	}
+	.classifyList{
+		display: flex;
+		overflow-x: auto;
+	}
+	.classifyList li{
+		line-height: 30px;
+		padding: 0 10px;
+	}
+	.classifyList li span{
+		font-size: 16px;
+		cursor: pointer;
 	}
 </style>

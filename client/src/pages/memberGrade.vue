@@ -115,6 +115,7 @@
 					})
 			},
 			showGradeAdd() {
+				this.isEdit = false
 				this.gradeAddVisible = true
 				this.ruleForm.gradeName = '',
 				this.ruleForm.gradeDiscount = ''

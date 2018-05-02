@@ -61,6 +61,26 @@ router.post('/goodsIn', (req, res, next) => {
 	})
 })
 
+////////查询所有进货
+router.get('/all', (req, res, next) => {
+	Stock.find({})
+		.exec((err, doc) => {
+			if(err) {
+				return res.json({
+					status: '0',
+					msg: err.message
+				})
+			}
+			return res.json({
+				status: '1',
+				msg: '',
+				result: {
+					count: doc.length,
+					list: doc
+				}
+			})
+		})
+})
 
 ////////////库存列表
 router.get('/list', (req, res, next) => {
@@ -71,8 +91,7 @@ router.get('/list', (req, res, next) => {
 	let params
 	if (findContent) {
 		params = {  //查询时候的过滤参数
-			$or: [{goodsId: {$regex: findContent}},
-			{goodsName: {$regex: findContent}}]
+			
 		}
 	} else {
 		params = {}
