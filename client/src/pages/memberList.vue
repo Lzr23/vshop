@@ -35,7 +35,7 @@
 				page-size=7
 				:current-page.sync="page"
       			@current-change="handleCurrentChange"
-				:total="10">
+				:total="memberTotal">
 			</el-pagination>
 		</div>
 		

@@ -34,28 +34,31 @@
 								<td>
 									<el-input-number size="mini" v-model="item.goodsNum" :min='1'></el-input-number>
 								</td>
-								<td>{{item.goodsPrice}}</td>
-								<td>{{item.goodsNum*item.goodsPrice}}</td>
-								<td><el-button type="danger" size='mini'>删除</el-button></td>
+								<td>{{item.goodsOut}}</td>
+								<td>{{item.goodsNum*item.goodsOut}}</td>
+								<td><el-button type="danger" size='mini' @click="cartDelete(item)">删除</el-button></td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
 			<div class='cartBottom'>
-				<p>总价：<span class='cartTotal'>500</span></p>
-				<el-button type="warning" size='medium '>结账</el-button>
+				<p>总价：<span class='cartTotal'>{{cartTotal}}</span></p>
+				<el-button type="warning" size='medium' @click="deal">结账</el-button>
 			</div>
   	</div>
+  	
   	<div class='mainRight'>
   		<el-input
 			  placeholder="请输入商品编号/名称"
 			  prefix-icon="el-icon-search"
 			  size="small"
 			  v-model="goodsFindInput"
+			  @change="findGoods"
 			>
 			</el-input>
 			<ul class="classifyList">
+				<li><span @click="getAllGoods">全部商品</span></li>
 				<li v-for="classify in classifys">
 			    <el-dropdown>
 			      <span class="el-dropdown-link" @click="getGoodsByClassify(classify.classifyP)">
@@ -71,10 +74,11 @@
 				</li>
 			</ul>
 		  <ul class='goodsList'>
-		  	<li v-for="good in goodsList">
+		  	<li v-for="good in goodsList" @click="addTocart(good)">
 		  			<img v-lazy="good.goodsImg"/>
 		  			<p class='goodsName' :title='good.goodsName'>{{good.goodsName}}</p>
 		  			<p>￥:<span class='goodsPrice'>{{good.goodsOut}}</span></p>
+		  			<p>库存：{{good.goodsStock}}</p>
 		  	</li>
 		  </ul>
   	</div>
@@ -89,45 +93,28 @@
   			memnerFindInput: '',    ///////查询会员关键字
   			allMember: [],   //////所有会员
         timeout:  null,   /////会员查询间隔
-  			goodsFindInput: '',     //////查询商品关键字
   			member: {},   ///////选中会员
+  			goodsFindInput: '',     //////查询商品关键字
+  			goodsList: [],   /////商品列表
   			classifys: [],     //////商品分类列表
-  			cartList: [    /////购物车列表
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			},
-	  			{
-	  				goodsName: '球衣',
-	  				goodsNum: 2,
-	  				goodsPrice: 50.5
-	  			}
-  			],
-  			goodsList: [
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			},
-  			{
-  				goodsPic: 'goods.png',
-  				goodsName: '球衣aaaaaaaaaaaaaa',
-  				goodsPrice: 50.5
-  			}
-  			]
+  			cartList: [],   /////购物车列表
   		}
   	},
   	components: {
     	NavHeader
    	},
   	computed:{
-  		
+  		cartTotal() {  ////////购物车总价
+  			let total = 0
+  			this.cartList.forEach(item => {
+  				total += item.goodsNum * item.goodsOut
+  			})
+  			if (this.member.discount) {
+  				return total * this.member.discount
+  			} else {
+  				return total
+  			}
+  		}
   	},
   	methods: {
   		/////////////////处理会员查询
@@ -180,7 +167,7 @@
 		   		}
 		   	})
       },
-      getGoodsByClassify(classifyName) {
+      getGoodsByClassify(classifyName) {  //////获取分类下的商品
       	let params = {
       		classifyName
       	}
@@ -191,11 +178,69 @@
 		   			this.goodsList = res.result
 		   		}
       	})
+      },
+      findGoods() {    ///////搜索商品
+      	let params = {
+      		page: 1,
+      		pageSize: 1000000,
+      		findContent: this.goodsFindInput
+      	}
+      	this.$http.get('/goods/list', {params}).then(res => {
+      		res = res.data
+      		if (res.status == '1') {
+		   			this.goodsList = res.result.list
+		   		}
+      	})
+      },
+      getAllGoods() {   /////////获取全部商品
+      	let params = {}
+      	this.$http.get('/goods/all').then(res => {
+      		res = res.data
+      		this.goodsList = res.result.list
+      	})
+      },
+      addTocart(goods) {  ////////商品添加到购物车
+      	let isExist = false
+      	this.cartList.forEach(item => {
+      		if (item.goodsId == goods.goodsId) {
+      			item.goodsNum ++
+      			isExist = true
+      			return
+      		}
+      	})
+      	if (!isExist) {
+      		this.$set(goods, "goodsNum", 1)
+      		this.cartList.push(goods)
+      	}
+      },
+      cartDelete(goods) {    ////////购物车中删除商品
+      	this.cartList.forEach((item, index) => {
+      		if (item.goodsId == goods.goodsId) {
+      			this.cartList.splice(index, 1)
+      		}
+      	})
+      },
+      deal() {   ///////结账
+      	if (this.member.memberBalance < this.cartTotal) {
+      		this.$message("余额不足，请使用现金支付过着前往充值")
+      		return
+      	}
+      	let order = {
+      		"member": this.member,
+      		"cartList": this.cartList,
+      		"orderTotal": this.cartTotal
+      	}
+      	this.$http.post('/orders/save', order).then(res => {
+      		res = res.data
+	   			this.$message(res.msg)
+	   			this.cartList = []
+      	})
       }
   	},
   	mounted() {
   		this.getAllMember()
   		this.getAllClassify()
+  		this.getAllGoods()
   	}
 		
   }
@@ -237,6 +282,7 @@
 	.cartTable{
 		width: 100%;
 		text-align: center;
+		font-size: 12px;
 	}
 	.cartTable thead{
 		font-weight: 800;
@@ -277,17 +323,23 @@
 	.goodsList li{
 		width: 25%;
 		box-sizing: border-box;
-		padding: 20px;
+		margin: 10px;
 		float: left;
+		border: 1px solid #F0F0F0;
+		cursor: pointer;
 	}
 	.goodsList li img{
 		width: 100%;
 		height: 80px;
 	}
+	.goodsList li p{
+		padding-left: 10px;
+	}
 	.goodsName{
 		overflow: hidden;
 		text-overflow:ellipsis;
 		white-space: nowrap;
+		font-size: 13px;
 	}
 	.goodsPrice{
 		font-size: 20px;

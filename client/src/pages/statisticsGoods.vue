@@ -2,9 +2,19 @@
 	<div>
 		<h3>商品销售量</h3>
 		<div class="table-function">
-			<el-button type="primary" plain size='small'>本周</el-button>
-			<el-button type="primary" plain size='small'>本月</el-button>
-			<el-button type="primary" plain size='small'>今年</el-button>
+			<div class="block">
+			    <el-date-picker
+			    v-model="dateSelected1"
+			    type="daterange"
+			    align="right"
+			    value-format="timestamp"
+			    unlink-panels
+			    range-separator="至"
+			    start-placeholder="开始日期"
+			    end-placeholder="结束日期"
+			    :picker-options="pickerOptions2">
+			    </el-date-picker>
+			</div>
 		</div>
 		<h4 style="text-align: left;">商品销售金额TOP10</h4>
 		<div class="goodsSaleAmount" ref='goodsSaleAmount'></div>
@@ -31,9 +41,19 @@
 		<div class="relative">
 			<h3>商品分类统计</h3>
 			<div class="table-function">
-				<el-button type="primary" plain size='small'>本周</el-button>
-				<el-button type="primary" plain size='small'>本月</el-button>
-				<el-button type="primary" plain size='small'>今年</el-button>
+				<div class="block">
+				    <el-date-picker
+				    v-model="dateSelected2"
+				    type="daterange"
+				    align="right"
+				    value-format="timestamp"
+				    unlink-panels
+				    range-separator="至"
+				    start-placeholder="开始日期"
+				    end-placeholder="结束日期"
+				    :picker-options="pickerOptions2">
+				    </el-date-picker>
+				</div>
 			</div>
 			<div class="statisticsTable" style="width:50%;margin-left: 0;">
 				<el-table :data="classifyData" stripe style="width: 100%">
@@ -58,6 +78,35 @@
 	export default {
 		data() {
 			return {
+				pickerOptions2: {
+		          shortcuts: [{
+		            text: '最近一周',
+		            onClick(picker) {
+		              const end = new Date();
+		              const start = new Date();
+		              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+		              picker.$emit('pick', [start, end]);
+		            }
+		          }, {
+		            text: '最近一个月',
+		            onClick(picker) {
+		              const end = new Date();
+		              const start = new Date();
+		              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+		              picker.$emit('pick', [start, end]);
+		            }
+		          }, {
+		            text: '最近三个月',
+		            onClick(picker) {
+		              const end = new Date();
+		              const start = new Date();
+		              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+		              picker.$emit('pick', [start, end]);
+		            }
+		          }]
+		        },
+		        dateSelected1: '',   //////选中日期
+		        dateSelected2: '',   //////选中日期
 				saleAmountOption: {
 					title: {
 						text: '商品销售金额TOP10'

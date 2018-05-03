@@ -27,14 +27,8 @@
 		      		<td>{{ goods.total }}</td>
 		      	</tr>
 	      	</table>
-	        <!--<el-form label-position="left" inline class="demo-table-expand">
-	          <el-form-item label="商品名称">
-	            <span></span>
-	          </el-form-item>
-	        </el-form>-->
 	      </template>
 	    </el-table-column>
-        <el-table-column type="selection"></el-table-column>
         <el-table-column prop="stockId" label="单号"></el-table-column>
         <el-table-column prop="stockQuantity" label="进货数量"></el-table-column>
         <el-table-column prop="stockTotal" label="合计"></el-table-column>
