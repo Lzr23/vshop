@@ -20,14 +20,15 @@ router.post('/upImg', (req, res, next) => {
 			console.log('parse files: ' + filesTmp);
 			var inputFile = files.inputFile[0];
 			var uploadedPath = inputFile.path;
-			var dstPath = './../client/static/images/' + inputFile.originalFilename.toLowerCase();
+			var random = parseInt(Math.random()*100)
+			var dstPath = './../client/static/images/'+ random + inputFile.originalFilename.toLowerCase();
 			//重命名为真实文件名
 			fs.rename(uploadedPath, dstPath, function(err) {
 				if(err) {
 					console.log('rename error: ' + err);
 				} else {
 					return res.json({
-						msg: inputFile.originalFilename.toLowerCase()
+						msg: random + inputFile.originalFilename.toLowerCase()
 					})
 				}
 			})

@@ -26,7 +26,6 @@ router.post('/goodsIn', (req, res, next) => {
 		stockTotal,
 		stockDate
 	}
-	console.log(newStock)
 	Stock.create(newStock, (err) => {
 		if (err) {
 			return res.json({
@@ -39,6 +38,7 @@ router.post('/goodsIn', (req, res, next) => {
 				Good.findOne({"goodsId": item.goodsId}, (err, doc) => {
 					if (doc != null) {
 						doc.goodsStock += parseInt(item.quantity)
+						doc.goodsLastIn = doc.goodsStock
 						doc.save((err, doc1) => {
 							if (err) {
 								return res.json({

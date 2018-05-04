@@ -6,6 +6,7 @@ import router from './router'
 import Axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueLazyload from 'vue-lazyload'
+import VueInfiniteScroll from 'vue-infinite-scroll'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -21,6 +22,7 @@ require('echarts/lib/component/tooltip')
 import apiConfig from '../config/api.config'
 
 Vue.config.productionTip = false
+Vue.use(VueInfiniteScroll)
 Vue.use(VueLazyload, {
   loading: 'static/loading-svg/loading-bars.svg',
   try: 3

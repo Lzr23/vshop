@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-//let Member = require('../models/member');
+let Member = require('../models/member');
 //let Grade = require('../models/grade');
-//let Good = require('../models/good');
+let Good = require('../models/good');
 //let Classify = require('../models/classify');
 let Order = require('../models/order');
 
@@ -17,10 +17,6 @@ router.post('/save', (req, res, next) => {
 	cartList.forEach(item => {
 		orderCount += item.goodsNum
 	})
-	
-	if (!member.memberCard) {
-		member.memberCell = "散客"
-	}
 	let newOrder = {
 		orderId,
 		orderDate,
@@ -29,19 +25,74 @@ router.post('/save', (req, res, next) => {
 		member,
 		cartList
 	}
-	Order.create(newOrder, (err) => {
-		if (err) {
-			return res.json({
-				status: '0',
-				msg: '支付失败'
+	
+	if (!member.memberCard) {  //////散客订单
+		member.memberCell = "散客"
+		let flag = 0
+				cartList.forEach(item => {   /////////更改商品库存
+					Good.findOne({goodsId: item.goodsId}, (err, doc2) => {
+						doc2.goodsStock -= item.goodsNum
+						doc2.save((err, doc3) => {
+							flag ++
+							console.log(flag)
+							if (flag == cartList.length) {
+								Order.create(newOrder, (err) => {
+									if (err) {
+										return res.json({
+											status: '0',
+											msg: '支付失败'
+										})
+									} else {
+										return res.json({
+											status: '1',
+											msg: '支付成功'
+										})
+									}
+								})
+							}
+						})
+					})
+				})
+	} else {  //////会员订单
+		Member.findOne({memberCard: member.memberCard}, (err, doc) => { ////更改会员余额
+		doc.memberBalance -= orderTotal
+		doc.save((err, doc1) => {
+			if (err) {
+				return res.json({
+		          status: '0',
+		          msg: err.message
+		        })
+			}
+			let flag = 0
+			cartList.forEach(item => {   /////////更改商品库存
+				Good.findOne({goodsId: item.goodsId}, (err, doc2) => {
+					doc2.goodsStock -= item.goodsNum
+					doc2.save((err, doc3) => {
+						flag ++
+						console.log(flag)
+						if (flag == cartList.length) {
+							Order.create(newOrder, (err) => {
+								if (err) {
+									return res.json({
+										status: '0',
+										msg: '支付失败'
+									})
+								} else {
+									return res.json({
+										status: '1',
+										msg: '支付成功'
+									})
+								}
+							})
+						}
+					})
+				})
 			})
-		} else {
-			return res.json({
-				status: '1',
-				msg: '支付成功'
-			})
-		}
+		})
 	})
+	}
+	
+	
 	
 })
 

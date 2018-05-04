@@ -102,10 +102,6 @@
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
 						if (this.isEdit) {
-							var url = document.getElementById('id_iframe').contentDocument.body.textContent
-							url = url.substr('8')
-							url = url.substr('0', url.length-2)
-							this.ruleForm.goodsImg = '../../static/images/' + url
 							this.$http.post('/goods/edit', this.ruleForm)
 							.then(res => {
 								res = res.data
@@ -117,10 +113,6 @@
 						   		}
 							})
 						} else {
-							var url = document.getElementById('id_iframe').contentDocument.body.textContent
-							url = url.substr('8')
-							url = url.substr('0', url.length-2)
-							this.ruleForm.goodsImg = '../../static/images/' + url
 							this.$http.post('/goods/add', this.ruleForm)
 							.then(res => {
 								res = res.data
@@ -160,7 +152,14 @@
 				document.getElementById('inputFile').click()
 			},
 			upImg() {
-				this.$message('上传成功')
+				var that = this
+				setTimeout(function() {
+					var url = document.getElementById('id_iframe').contentDocument.body.textContent
+					url = url.substr('8')
+					url = url.substr('0', url.length-2)
+					that.ruleForm.goodsImg = '../../static/images/' + url
+					that.$message('上传成功')
+				},1000)
 			},
 			getClassify() {
 				this.$http.get('/classifys/goodsClassify')

@@ -87,4 +87,63 @@ router.get('/getGoodsByClassify', (req, res, next) => {
 		})
 	})
 })
+
+//////////////获取所有未下架商品
+router.get('/goodsList', (req, res, next) => {
+	Good.find({goodsStatus: 1})
+		.exec((err, doc) => {
+			if(err) {
+				return res.json({
+					status: '0',
+					msg: err.message
+				})
+			}
+			return res.json({
+				status: '1',
+				msg: '',
+				result: {
+					count: doc.length,
+					list: doc
+				}
+			})
+		})
+})
+
+///////////////查询未下架商品
+router.get('/list', (req, res, next) => {
+	let page = parseInt(req.query["page"]); //获取当前页码
+	let pageSize = parseInt(req.query["pageSize"]); //获取页的大小
+	let skip = (page - 1) * pageSize; //计算需要跳过多少条
+	let findContent = req.query['findContent']
+	let params
+	if (findContent) {
+		params = {  //查询时候的过滤参数
+			$or: [{goodsId: {$regex: findContent}},
+			{goodsName: {$regex: findContent}}],
+			goodsStatus: 1
+		}
+	} else {
+		params = {}
+	}
+	//查找商品，跳过skip条，限制一页查pageSize条
+	Good.find(params)
+		.skip(skip)
+		.limit(pageSize)
+		.exec((err, doc) => {
+			if(err) {
+				return res.json({
+					status: '0',
+					msg: err.message
+				});
+			}
+			return res.json({
+				status: '1',
+				msg: '',
+				result: {
+					count: doc.length,
+					list: doc
+				}
+			});
+		})
+})
 module.exports = router;

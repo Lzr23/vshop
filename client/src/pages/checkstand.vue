@@ -185,7 +185,7 @@
       		pageSize: 1000000,
       		findContent: this.goodsFindInput
       	}
-      	this.$http.get('/goods/list', {params}).then(res => {
+      	this.$http.get('/cashier/list', {params}).then(res => {
       		res = res.data
       		if (res.status == '1') {
 		   			this.goodsList = res.result.list
@@ -194,7 +194,7 @@
       },
       getAllGoods() {   /////////获取全部商品
       	let params = {}
-      	this.$http.get('/goods/all').then(res => {
+      	this.$http.get('/cashier/allGoods').then(res => {
       		res = res.data
       		this.goodsList = res.result.list
       	})
@@ -221,8 +221,18 @@
       	})
       },
       deal() {   ///////结账
-      	if (this.member.memberBalance < this.cartTotal) {
-      		this.$message("余额不足，请使用现金支付过着前往充值")
+      	let isStock = true
+      	this.cartList.forEach(item => {  ///////判断库存是否充足
+      		if (item.goodsStock < item.goodsNum) {
+      			this.$message(item.goodsName + '库存不足！')
+      			isStock = false
+      			return
+      		}
+      	})
+      	if (!isStock) return
+      	
+      	if (this.member.memberBalance < this.cartTotal) { ////判断余额是否充足
+      		this.$message("余额不足，请使用现金支付或前往充值")
       		return
       	}
       	let order = {
@@ -234,6 +244,7 @@
       		res = res.data
 	   			this.$message(res.msg)
 	   			this.cartList = []
+	   			this.getAllGoods()
       	})
       }
   	},
@@ -321,9 +332,9 @@
 		overflow-y: auto;
 	}
 	.goodsList li{
-		width: 25%;
+		width: 23%;
 		box-sizing: border-box;
-		margin: 10px;
+		margin: 1%;
 		float: left;
 		border: 1px solid #F0F0F0;
 		cursor: pointer;

@@ -10,6 +10,7 @@ let goodsSchema = new mongoose.Schema({
 	"goodsOut": Number, //商品售价
 	"goodsStock": Number, //商品库存
 	"goodsStatus": Number, //商品状态
+	"goodsLastIn": Number,  ///最近一次进货的库存
 	"goodsRemark": String //商品备注
 });
 

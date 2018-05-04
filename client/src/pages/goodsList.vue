@@ -230,9 +230,9 @@
 	        if (row.goodsStock == 0) {
 	          return 'danger';
 	        }
-//	        else if (rowIndex === 1) {
-//	          return 'warning';
-//	        }
+	        else if (row.goodsStock <= (row.goodsLastIn * 0.2)) {
+	          return 'warning';
+	        }
 	        return '';
 	      }
       },
