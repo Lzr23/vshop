@@ -226,7 +226,7 @@
 			  		this.getGoodsList()
 			  	})
 			  },
-			  tableRowClassName({row, rowIndex}) {
+			  tableRowClassName({row, rowIndex}) {   //////设置警戒值
 	        if (row.goodsStock == 0) {
 	          return 'danger';
 	        }

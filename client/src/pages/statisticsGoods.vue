@@ -1,10 +1,9 @@
 <template>
 	<div>
-		<h3>商品销售量</h3>
 		<div class="table-function">
 			<div class="block">
 			    <el-date-picker
-			    v-model="dateSelected1"
+			    v-model="dateSelected"
 			    type="daterange"
 			    align="right"
 			    value-format="timestamp"
@@ -12,6 +11,7 @@
 			    range-separator="至"
 			    start-placeholder="开始日期"
 			    end-placeholder="结束日期"
+			    @change="getOrder"
 			    :picker-options="pickerOptions2">
 			    </el-date-picker>
 			</div>
@@ -22,50 +22,19 @@
 		<h4 style="text-align: left;">商品销售量TOP10</h4>
 		<div class="goodsSaleQuantity" ref='goodsSaleQuantity'></div>
 
-		<h4>会员消费TOP10</h4>
-		<el-table :data="goodsSaleData" stripe style="width: 100%">
-			<el-table-column prop="sort" label="排名">
-			</el-table-column>
-			<el-table-column prop="goodsName" label="商品名称">
-			</el-table-column>
-			<el-table-column prop="goodsQuantity" label="销售数量">
-			</el-table-column>
-			<el-table-column prop="goodsAmount" label="销售总额">
-			</el-table-column>
-			<el-table-column prop="goodsProfit" label="毛利润">
-			</el-table-column>
-			<el-table-column prop="goodsDayProfit" label="日均利润">
-			</el-table-column>
-		</el-table>
-
 		<div class="relative">
-			<h3>商品分类统计</h3>
-			<div class="table-function">
-				<div class="block">
-				    <el-date-picker
-				    v-model="dateSelected2"
-				    type="daterange"
-				    align="right"
-				    value-format="timestamp"
-				    unlink-panels
-				    range-separator="至"
-				    start-placeholder="开始日期"
-				    end-placeholder="结束日期"
-				    :picker-options="pickerOptions2">
-				    </el-date-picker>
-				</div>
-			</div>
+			<h3>商品分类Top5</h3>
 			<div class="statisticsTable" style="width:50%;margin-left: 0;">
-				<el-table :data="classifyData" stripe style="width: 100%">
+				<el-table :data="classifyTable" stripe style="width: 100%">
 					<el-table-column prop="sort" label="排名">
 					</el-table-column>
-					<el-table-column prop="classifyName" label="分类名称">
+					<el-table-column prop="goodsClassifyC" label="分类名称">
 					</el-table-column>
-					<el-table-column prop="classifyParent" label="父级分类">
+					<el-table-column prop="goodsClassifyP" label="父级分类">
 					</el-table-column>
-					<el-table-column prop="classifyQuantity" label="销售数量">
+					<el-table-column prop="goodsNum" label="销售数量">
 					</el-table-column>
-					<el-table-column prop="classifyAmount" label="销售金额">
+					<el-table-column prop="goodsTotal" label="销售金额">
 					</el-table-column>
 				</el-table>
 			</div>
@@ -105,8 +74,8 @@
 		            }
 		          }]
 		        },
-		        dateSelected1: '',   //////选中日期
-		        dateSelected2: '',   //////选中日期
+		        dateSelected: '',   //////选中日期
+		        orderList: [],  //////订单列表
 				saleAmountOption: {
 					title: {
 						text: '商品销售金额TOP10'
@@ -116,7 +85,7 @@
 						data: ['销售额']
 					},
 					xAxis: {
-						data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+						data: []
 					},
 					yAxis: {},
 					series: [{
@@ -149,13 +118,13 @@
 						data: ['销售量']
 					},
 					xAxis: {
-						data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+						data: []
 					},
 					yAxis: {},
 					series: [{
 						name: '销售量',
 						type: 'bar',
-						data: [200, 182, 158, 144, 132, 123, 101, 98, 89, 78],
+						data: [],
 						itemStyle: {
 							normal: {
 								color: function(params) {
@@ -186,7 +155,6 @@
 						trigger: 'item',
 						formatter: "{a} <br/>{b} : {d}%"
 					},
-
 					visualMap: {
 						show: false,
 						min: 500,
@@ -225,123 +193,207 @@
 
 						],
 					}]
-				},
-				goodsSaleData: [{
-					sort: 1,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 2,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 3,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 4,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 5,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 6,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 7,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 8,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 9,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}, {
-					sort: 10,
-					goodsName: '白色T恤1',
-					goodsQuantity: 120,
-					goodsAmount: 123201,
-					goodsProfit: 73230,
-					goodsDayProfit: 13230
-				}],
-				classifyData: [{
-					sort: 1,
-					classifyName: '牛仔裤',
-					classifyParent: '下装',
-					classifyQuantity: 500,
-					classifyAmount: 43220
-				},{
-					sort: 2,
-					classifyName: 'T恤',
-					classifyParent: '上装',
-					classifyQuantity: 400,
-					classifyAmount: 36210
-				},{
-					sort: 3,
-					classifyName: '休闲裤',
-					classifyParent: '下装',
-					classifyQuantity: 300,
-					classifyAmount: 33220
-				},{
-					sort: 4,
-					classifyName: '衬衫',
-					classifyParent: '上装',
-					classifyQuantity: 20,
-					classifyAmount: 27220
-				},{
-					sort: 5,
-					classifyName: '卫衣',
-					classifyParent: '上装',
-					classifyQuantity: 200,
-					classifyAmount: 13220
-				}]
+				}
 			}
 		},
-		mounted() {
-			this.setEchart()
+		computed: {
+			goodsAmountList() { /////////商品销售金额TOP10
+				let list = []
+				this.orderList.forEach(order => {  /////获取所有商品销售额
+					order.cartList.forEach(cart => {
+						if (list.length == 0) {
+							let goods = {
+								goodsId: cart.goodsId,
+								goodsName: cart.goodsName,
+								goodsTotal: cart.goodsOut * cart.goodsNum
+							}
+							list.push(goods)
+						} else {
+							let isExist = false
+							list.forEach(item => {
+								if (cart.goodsId == item.goodsId) {
+									item.goodsTotal += (cart.goodsOut * cart.goodsNum)
+									isExist = true
+									return
+								}
+							})
+							if (!isExist) {
+								let goods = {
+									goodsId: cart.goodsId,
+									goodsName: cart.goodsName,
+									goodsTotal: cart.goodsOut * cart.goodsNum
+								}
+								list.push(goods)
+							}
+						}
+					})
+				})
+				
+				let amountName = [] /////商品前10名称
+				let amount = []  ////商品前10销售额
+				list = list.sort(this.sortGoods("goodsTotal"))
+				list.forEach((item,index) => {
+					if (index < 10){
+						amountName.push(item.goodsName)
+						amount.push(item.goodsTotal)
+					}
+				})
+				
+				return {amountName, amount}
+			},
+			goodsCountList() { /////////商品销售量TOP10
+				let list = []
+				this.orderList.forEach(order => {  /////获取所有商品销售量
+					order.cartList.forEach(cart => {
+						if (list.length == 0) {
+							let goods = {
+								goodsId: cart.goodsId,
+								goodsName: cart.goodsName,
+								goodsNum: cart.goodsNum
+							}
+							list.push(goods)
+						} else {
+							let isExist = false
+							list.forEach(item => {
+								if (cart.goodsId == item.goodsId) {
+									item.goodsNum += cart.goodsNum
+									isExist = true
+									return
+								}
+							})
+							if (!isExist) {
+								let goods = {
+									goodsId: cart.goodsId,
+									goodsName: cart.goodsName,
+									goodsNum: cart.goodsNum
+								}
+								list.push(goods)
+							}
+						}
+					})
+				})
+				
+				let countName = [] /////商品前10名称
+				let count = []  ////商品前10销售量
+				list = list.sort(this.sortGoods("goodsNum"))
+				list.forEach((item,index) => {
+					if (index < 10){
+						countName.push(item.goodsName)
+						count.push(item.goodsNum)
+					}
+				})
+				
+				return {countName, count}
+			},
+			classifyTable() { //////分类Top5
+				let list = []
+				this.orderList.forEach(order => {  /////获取所有分类销售额
+					order.cartList.forEach(cart => {
+						if (list.length == 0) {
+							let goods = {
+								goodsClassifyC: cart.goodsClassifyC,
+								goodsClassifyP: cart.goodsClassifyP,
+								goodsNum: cart.goodsNum,
+								goodsTotal: cart.goodsNum * cart.goodsOut
+							}
+							list.push(goods)
+						} else {
+							let isExist = false
+							list.forEach(item => {
+								if (cart.goodsClassifyC == item.goodsClassifyC) {
+									item.goodsNum += cart.goodsNum
+									item.goodsTotal += (cart.goodsNum * cart.goodsOut)
+									isExist = true
+									return
+								}
+							})
+							if (!isExist) {
+								let goods = {
+									goodsClassifyC: cart.goodsClassifyC,
+									goodsClassifyP: cart.goodsClassifyP,
+									goodsNum: cart.goodsNum,
+									goodsTotal: cart.goodsNum * cart.goodsOut
+								}
+								list.push(goods)
+							}
+						}
+					})
+				})
+				
+				let result = [] /////排序，获取前5
+				list = list.sort(this.sortGoods("goodsTotal"))
+				list.forEach((item,index) => {
+					if (index < 5){
+						item.sort = index + 1
+						result.push(item)
+					}
+				})
+				
+				return result
+			},
+			classifyPercent() { //////分类Top5占比
+				let list = []
+				let total = 0
+				this.classifyTable.forEach(item => {
+					total += item.goodsTotal
+				})
+				this.classifyTable.forEach(item => {
+					let percent = {
+						value: (item.goodsTotal / total).toFixed(2) * 100,
+						name: item.goodsClassifyC
+					}
+					list.push(percent)
+				})
+				return list
+			}
 		},
 		methods: {
 			setEchart() {
+				///////////设置商品销售额Top10
+				this.saleAmountOption.xAxis.data = this.goodsAmountList.amountName
+				this.saleAmountOption.series[0].data = this.goodsAmountList.amount
 				let goodsSaleAmount = this.$echarts.init(this.$refs.goodsSaleAmount)
 				goodsSaleAmount.setOption(this.saleAmountOption)
+				
+				///////////设置商品销售量Top10
+				this.saleQuantityOption.xAxis.data = this.goodsCountList.countName
+				this.saleQuantityOption.series[0].data = this.goodsCountList.count
 				let goodsSaleQuantity = this.$echarts.init(this.$refs.goodsSaleQuantity)
 				goodsSaleQuantity.setOption(this.saleQuantityOption)
+				
+				/////////设置商品分类Top5
+				this.classifyOption.series[0].data = this.classifyPercent
 				let classifySale = this.$echarts.init(this.$refs.classifySale)
 				classifySale.setOption(this.classifyOption)
+			},
+			getOrder() {   ////////根据日期筛选订单
+				this.$http.get('/orders/all').then(res => {
+					res = res.data
+					let list = []
+					if (this.dateSelected == '') {  /////未选择时间，返回全部订单
+							list = res.result.list
+					} else {
+						res.result.list.forEach(item => {  ////////根据时间筛选订单
+							let orderDate = Date.parse(item.orderDate)
+							if (orderDate >= this.dateSelected[0] && orderDate <= this.dateSelected[1]) {
+								list.push(item)
+							}
+						})
+					}
+					this.orderList = list
+					this.setEchart()
+				})
+			},
+			sortGoods(target) {
+				return function(a,b){
+			        var value1 = a[target];
+			        var value2 = b[target];
+			        return value2 - value1;
+			    }
 			}
+		},
+		mounted() {
+			this.getOrder()
 		}
 	}
 </script>

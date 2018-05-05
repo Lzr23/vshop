@@ -14,7 +14,6 @@ import goodsAdd from '@/pages/goodsAdd'
 import goodsClassify from '@/pages/goodsClassify'
 
 import stockGoods from '@/pages/stockGoods'
-import stockWarehouse from '@/pages/stockWarehouse'
 
 import statisticsMember from '@/pages/statisticsMember'
 import statisticsGoods from '@/pages/statisticsGoods'
@@ -80,11 +79,6 @@ export default new Router({
           path: 'stockGoods',
           name: 'stockGoods',
           component: stockGoods
-        },
-        {
-          path: 'stockWarehouse',
-          name: 'stockWarehouse',
-          component: stockWarehouse
         },
         {
           path: 'statisticsMember',

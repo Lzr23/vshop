@@ -110,7 +110,7 @@
   				total += item.goodsNum * item.goodsOut
   			})
   			if (this.member.discount) {
-  				return total * this.member.discount
+  				return (total * this.member.discount).toFixed(2)
   			} else {
   				return total
   			}
@@ -194,7 +194,7 @@
       },
       getAllGoods() {   /////////获取全部商品
       	let params = {}
-      	this.$http.get('/cashier/allGoods').then(res => {
+      	this.$http.get('/cashier/goodsList').then(res => {
       		res = res.data
       		this.goodsList = res.result.list
       	})
@@ -244,6 +244,7 @@
       		res = res.data
 	   			this.$message(res.msg)
 	   			this.cartList = []
+	   			this.member = {}
 	   			this.getAllGoods()
       	})
       }

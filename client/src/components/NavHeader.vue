@@ -5,10 +5,12 @@
 			  <img class="navbar-brand-logo" src="/static/logo.png">
 			</router-link>
 		</el-col>
-		<router-link href="javascript:;" to="/backEnd">后台管理</router-link>
-		<router-link href="javascript:;" to="/checkstand">前台收银</router-link>
-		<!--<a href="javascript:;">退出</a>-->
-		<router-link href="javascript:;" to="/">退出</router-link>
+		<el-col :span="12"></el-col>
+		<el-col :span="6">
+			<router-link href="javascript:;" to="/backEnd"><span style="margin: 0 10px;">后台管理</span></router-link>
+			<router-link href="javascript:;" to="/checkstand"><span style="margin: 0 10px;">前台收银</span></router-link>
+			<router-link href="javascript:;" to="/">退出</router-link>
+		</el-col>
 	</el-row>
 </template>
 

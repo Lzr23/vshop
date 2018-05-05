@@ -10,9 +10,10 @@
 	    range-separator="至"
 	    start-placeholder="开始日期"
 	    end-placeholder="结束日期"
+	    @change="getOrder"
 	    :picker-options="pickerOptions2">
 	    </el-date-picker>
-	</div>
+		</div>
 	
 	<el-table
         :data="orderList"
@@ -95,45 +96,57 @@
         },
         dateSelected: '',   //////选中日期
         orderTotal: 0, ////订单总数
-		page: 1,  /////当前第几页
-		pageSize: 7,  ///////一页7条数据
-		loading: false,       // 是否正在加载
-	    orderList: []  ////订单列表
+				page: 1,  /////当前第几页
+				pageSize: 7,  ///////一页7条数据
+				loading: false,       // 是否正在加载
+				orderAll: [],  ////全部订单
+		    orderList: []  ////订单列表
       }
     },
     methods:{
     	handleCurrentChange(val) {  ////改变当前页数
-		  this.page = val
-		  this.getOrderList()
-		},
-		getOrderList() {   ///////获取订单列表
-			var params = {
+			  this.page = val
+			  this.getOrderList()
+			},
+			getOrderList() {   ///////获取订单列表
+				var params = {
 		   		page: this.page,
 	    		pageSize: this.pageSize,
 		   	}
-		   	this.loading = true
-		   	this.$http.get('/orders/list', {params})
-		   	.then(res => {
-		   		res = res.data
-		   		this.loading = false
-		   		if (res.status == '1') {
-		   			this.orderList = res.result.list
-		   		}
-		   	})
-		},
-		getAll() {   //////获取订单总数
-			this.$http.get('/orders/all')
-		   	.then(res => {
-		   		res = res.data
-		   		if (res.status == '1') {
-		   		this.orderTotal = res.result.count
-		   		}
-		   	})
-		}
+				let skip = (this.page - 1) * this.pageSize
+				this.orderList = this.orderAll.slice(skip , skip + this.pageSize)
+//		   	this.$http.get('/orders/list', {params})
+//		   	.then(res => {
+//		   		res = res.data
+//		   		if (res.status == '1') {
+//		   			this.orderList = res.result.list
+//		   		}
+//		   	})
+			},
+			getOrder() {   ////////根据日期筛选订单
+				this.loading = true
+				this.$http.get('/orders/all').then(res => {
+					res = res.data
+					this.loading = false
+					let list = []
+					if (this.dateSelected == '') {  /////未选择时间，返回全部订单
+							list = res.result.list
+					} else {
+						res.result.list.forEach(item => {  ////////根据时间筛选订单
+							let orderDate = Date.parse(item.orderDate)
+							if (orderDate >= this.dateSelected[0] && orderDate <= this.dateSelected[1]) {
+								list.push(item)
+							}
+						})
+					}
+					this.orderAll = list
+					this.orderTotal = list.length
+					this.getOrderList()
+				})
+			}
     },
     mounted() {
-    	this.getOrderList()
-    	this.getAll()
+	    this.getOrder()
     }
   }
 </script>

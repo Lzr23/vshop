@@ -37,10 +37,7 @@
         <span slot="title">库存管理</span>
       </template>
       <el-menu-item index="3-1">
-        <router-link href="javascript:;" to="/backEnd/stockGoods">商品库存</router-link>
-      </el-menu-item>
-      <el-menu-item index="3-2">
-        <router-link href="javascript:;" to="/backEnd/stockWarehouse">仓库管理</router-link>
+        <router-link href="javascript:;" to="/backEnd/stockGoods">进货记录</router-link>
       </el-menu-item>
     </el-submenu>
     <el-submenu index="4">
